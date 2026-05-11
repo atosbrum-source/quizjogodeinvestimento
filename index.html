@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mestre dos Investimentos: A Jornada Completa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://api.fontsource.org/v1/css/google/inter.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+        .btn-option {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+        }
+        .btn-option::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 0%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: width 0.5s;
+        }
+        .btn-option:hover::after { width: 100%; }
+        .fade-in-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .glow-text { text-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
+        .intro-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background-color: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease-out;
+        }
+        .bar-animate {
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[url('https://images.unsplash.com/photo-1611974765270-ca12586343bb?q=80&w=2064&auto=format&fit=crop')] bg-cover bg-center bg-no-repeat bg-fixed">
+    
+    <!-- Intro Screen (5 Seconds) -->
+    <div id="intro-screen" class="intro-overlay">
+        <div class="text-center max-w-2xl px-6 fade-in-up">
+            <img src="homem.png" 
+                 alt="Investidor confuso" 
+                 class="w-full max-w-lg h-auto rounded-2xl shadow-2xl mb-6 border border-white/10">
+            <div class="w-64 mx-auto bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                <div id="intro-progress" class="bg-emerald-500 h-1.5 rounded-full transition-all duration-[4800ms] ease-linear" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed inset-0 bg-slate-900/90 z-0"></div>
+
+    <!-- Header -->
+    <header class="relative z-10 border-b border-white/10 bg-slate-900/80 backdrop-blur-md sticky top-0">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-white tracking-tight">InvestidorPro <span class="text-emerald-400">A Jornada</span></h1>
+                    <p class="text-xs text-slate-400 uppercase tracking-wider">Simulador Profissional</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex flex-col items-end">
+                    <span class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Patrimônio Líquido</span>
+                    <span id="global-score" class="text-2xl font-mono font-bold text-emerald-400 glow-text">R$ 0,00</span>
+                </div>
+                <button onclick="toggleSound()" id="sound-btn" class="p-2 rounded-full hover:bg-white/10 transition-colors text-slate-400">
+                    <svg id="icon-sound-on" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
+                    <svg id="icon-sound-off" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 flex-grow flex items-center justify-center p-4 md:p-8">
+        <div id="game-container" class="w-full max-w-4xl">
+            
+            <!-- Intro Screen (Game Start) -->
+            <div id="screen-intro" class="glass-card rounded-2xl p-8 md:p-12 text-center fade-in-up hidden">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-emerald-500/10 mb-6 ring-1 ring-emerald-500/50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                    </svg>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-white">Domine o Mercado Financeiro</h2>
+                <p class="text-lg text-slate-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+                    Evolua de um iniciante curioso a um expert em alocação de ativos. 
+                    Tome decisões estratégicas, gerencie riscos e maximize seus retornos em 4 níveis de dificuldade.
+                </p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                    <div class="bg-slate-800/50 p-4 rounded-xl border border-white/5">
+                        <div class="text-emerald-400 font-bold text-xl">Nível 1</div>
+                        <div class="text-xs text-slate-400">Iniciante</div>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-xl border border-white/5">
+                        <div class="text-blue-400 font-bold text-xl">Nível 2</div>
+                        <div class="text-xs text-slate-400">Intermediário</div>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-xl border border-white/5">
+                        <div class="text-purple-400 font-bold text-xl">Nível 3</div>
+                        <div class="text-xs text-slate-400">Avançado</div>
+                    </div>
+                    <div class="bg-slate-800/50 p-4 rounded-xl border border-white/5">
+                        <div class="text-amber-400 font-bold text-xl">Nível 4</div>
+                        <div class="text-xs text-slate-400">Expert</div>
+                    </div>
+                </div>
+                <button onclick="startGame()" class="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-200 bg-emerald-600 font-pj rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-600 hover:bg-emerald-500 hover:shadow-lg hover:shadow-emerald-500/30">
+                    Iniciar Trajetória
+                    <svg class="w-5 h-5 ml-2 -mr-1 transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Scenario Screen -->
+            <div id="screen-scenario" class="hidden glass-card rounded-2xl overflow-hidden fade-in-up">
+                <div class="w-full bg-slate-800 h-1.5">
+                    <div id="level-progress" class="bg-emerald-500 h-1.5 transition-all duration-500" style="width: 25%"></div>
+                </div>
+                <div class="p-8 md:p-10">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                        <div>
+                            <span id="level-badge" class="inline-block px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 mb-2">Nível 1: Iniciante</span>
+                            <h3 id="scenario-title" class="text-2xl md:text-3xl font-bold text-white">Título do Cenário</h3>
+                        </div>
+                        <div class="bg-slate-800/80 px-4 py-2 rounded-lg border border-white/10">
+                            <span class="text-xs text-slate-400 block">Capital Disponível</span>
+                            <span id="current-balance" class="text-xl font-mono font-bold text-white">R$ 1.000,00</span>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 mb-8">
+                        <div class="bg-blue-500/10 p-3 rounded-lg border border-blue-500/20 shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <p id="scenario-desc" class="text-lg text-slate-300 leading-relaxed">Descrição...</p>
+                    </div>
+                    <div id="options-container" class="grid grid-cols-1 gap-4"></div>
+                </div>
+            </div>
+
+            <!-- Feedback Modal -->
+            <div id="modal-feedback" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm">
+                <div class="glass-card w-full max-w-lg rounded-2xl p-8 border-t-4" id="feedback-border">
+                    <div class="flex justify-between items-start mb-6">
+                        <div id="feedback-icon-bg" class="w-12 h-12 rounded-full flex items-center justify-center text-2xl bg-emerald-500/20 text-emerald-400">🚀</div>
+                        <button onclick="closeFeedback()" class="text-slate-400 hover:text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+                    <h3 id="feedback-title" class="text-2xl font-bold text-white mb-2">Resultado</h3>
+                    <p id="feedback-message" class="text-slate-300 mb-6 leading-relaxed">Explicação...</p>
+                    <div class="bg-slate-800/50 rounded-xl p-4 border border-white/5 mb-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-slate-400">Impacto no Patrimônio</span>
+                            <span id="feedback-change" class="font-mono font-bold text-lg">+ R$ 0,00</span>
+                        </div>
+                    </div>
+                    <button id="next-level-btn" onclick="nextPhase()" class="w-full py-3 px-4 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-200 transition-colors">
+                        Continuar Jornada
+                    </button>
+                </div>
+            </div>
+
+            <!-- Final Screen -->
+            <div id="screen-final" class="hidden glass-card rounded-2xl p-8 md:p-12 text-center fade-in-up">
+                <div class="mb-6 relative inline-block">
+                    <div class="absolute inset-0 bg-amber-500 blur-2xl opacity-20 rounded-full"></div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-amber-400 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                    </svg>
+                </div>
+                
+                <h2 id="final-title" class="text-4xl font-bold mb-2 text-white">Resultado Final</h2>
+                <p id="final-subtitle" class="text-slate-400 mb-6">Análise completa do seu desempenho.</p>
+                
+                <div class="bg-gradient-to-r from-slate-800 to-slate-900 rounded-2xl p-8 border border-white/10 mb-8 max-w-2xl mx-auto">
+                    <p class="text-sm text-slate-400 uppercase tracking-widest mb-2">Patrimônio Final Acumulado</p>
+                    <div id="final-score" class="text-5xl md:text-6xl font-mono font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">R$ 0,00</div>
+                </div>
+
+                <!-- Classification Badge -->
+                <div id="classification-badge" class="inline-block px-6 py-3 rounded-xl border-2 mb-8">
+                    <span id="classification-text" class="text-xl font-bold"></span>
+                </div>
+
+                <!-- Graphical Analysis -->
+                <div class="bg-slate-800/50 rounded-2xl p-6 border border-white/5 mb-8 max-w-2xl mx-auto text-left">
+                    <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        Análise Gráfica de Desempenho
+                    </h3>
+                    
+                    <canvas id="performance-chart" class="w-full mb-6" height="200"></canvas>
+                    
+                    <div class="grid grid-cols-3 gap-4 text-center">
+                        <div class="bg-emerald-500/10 rounded-lg p-3 border border-emerald-500/20">
+                            <div class="text-2xl font-bold text-emerald-400" id="stat-good">0</div>
+                            <div class="text-xs text-emerald-300/70">Decisões Acertadas</div>
+                        </div>
+                        <div class="bg-blue-500/10 rounded-lg p-3 border border-blue-500/20">
+                            <div class="text-2xl font-bold text-blue-400" id="stat-neutral">0</div>
+                            <div class="text-xs text-blue-300/70">Decisões Neutras</div>
+                        </div>
+                        <div class="bg-red-500/10 rounded-lg p-3 border border-red-500/20">
+                            <div class="text-2xl font-bold text-red-400" id="stat-bad">0</div>
+                            <div class="text-xs text-red-300/70">Decisões Erradas</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-slate-400">Potencial Máximo de Ganho</span>
+                            <span id="max-gain" class="text-sm font-mono font-bold text-emerald-400"></span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-2">
+                            <div id="max-gain-bar" class="bg-emerald-500 h-2 rounded-full bar-animate" style="width: 0%"></div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mt-2">
+                            <span class="text-sm text-slate-400">Seu Ganho Realizado</span>
+                            <span id="real-gain" class="text-sm font-mono font-bold text-emerald-400"></span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-2">
+                            <div id="real-gain-bar" class="bg-emerald-400 h-2 rounded-full bar-animate" style="width: 0%"></div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mt-2">
+                            <span class="text-sm text-slate-400">Perda Evitada (vs pior cenário)</span>
+                            <span id="loss-avoided" class="text-sm font-mono font-bold text-blue-400"></span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-2">
+                            <div id="loss-avoided-bar" class="bg-blue-500 h-2 rounded-full bar-animate" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="location.reload()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:-translate-y-1">
+                    Nova Simulação
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let soundEnabled = true;
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
+            if (type === 'success') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.1);
+                osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.2);
+                gainNode.gain.setValueAtTime(0.1, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+                osc.start(now); osc.stop(now + 0.6);
+            } else if (type === 'error') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.linearRampToValueAtTime(100, now + 0.3);
+                gainNode.gain.setValueAtTime(0.1, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc.start(now); osc.stop(now + 0.4);
+            } else if (type === 'click') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(800, now);
+                gainNode.gain.setValueAtTime(0.05, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+                osc.start(now); osc.stop(now + 0.05);
+            } else if (type === 'win') {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.setValueAtTime(523.25, now + 0.1);
+                osc.frequency.setValueAtTime(523.25, now + 0.2);
+                osc.frequency.setValueAtTime(659.25, now + 0.4);
+                gainNode.gain.setValueAtTime(0.05, now);
+                gainNode.gain.linearRampToValueAtTime(0, now + 1.5);
+                osc.start(now); osc.stop(now + 1.5);
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('icon-sound-on').classList.toggle('hidden');
+            document.getElementById('icon-sound-off').classList.toggle('hidden');
+        }
+
+        const gameState = {
+            currentPhase: 0,
+            balance: 1000,
+            totalPhases: 24,
+            choices: []
+        };
+
+        const levels = [
+            {
+                name: "Nível 1: Investidor Iniciante",
+                color: "emerald",
+                scenarios: [
+                    {
+                        title: "A Base de Tudo",
+                        desc: "Você tem R$ 1.000,00. Antes de buscar altos retornos, qual é o passo fundamental de segurança?",
+                        options: [
+                            { text: "Comprar ações de tecnologia", impact: -150, type: "bad", feedback: "Arriscado demais para seu primeiro passo. Ações são voláteis e você pode precisar desse dinheiro para emergências, sendo obrigado a vender com prejuízo." },
+                            { text: "Reserva de Emergência (Tesouro Selic/CDB Liquidez Diária)", impact: 50, type: "good", feedback: "Perfeito! Segurança e liquidez são prioritários no início. Esse dinheiro deve estar sempre acessível." },
+                            { text: "Deixar na Conta Corrente", impact: 0, type: "neutral", feedback: "Seguro contra perdas nominais, mas a inflação está corroendo seu poder de compra silenciosamente. Dinheiro parado perde valor." }
+                        ]
+                    },
+                    {
+                        title: "O Vilão Inflacionário",
+                        desc: "Sua reserva está feita. A inflação subiu para 10% ao ano. Onde seu dinheiro deve estar para não perder valor real?",
+                        options: [
+                            { text: "Poupança (Rende ~6% a.a.)", impact: -40, type: "bad", feedback: "Matematicamente prejudicial. Se a inflação é 10% e a poupança rende 6%, você perdeu 4% de poder de compra real." },
+                            { text: "IPCA+ (Tesouro Direto)", impact: 100, type: "good", feedback: "Excelente! Títulos atrelados à inflação (IPCA) garantem que seu dinheiro renderá acima dos preços dos produtos." },
+                            { text: "Guardar em Espécie (Colchão)", impact: -100, type: "bad", feedback: "Pior opção possível. O papel moeda não gera juros e desvaloriza integralmente pela inflação, além do risco de roubo." }
+                        ]
+                    },
+                    {
+                        title: "Primeiros Riscos",
+                        desc: "Com a base sólida, você quer começar a arriscar um pouco (Renda Variável). Qual a melhor porta de entrada?",
+                        options: [
+                            { text: "Day Trade em Opções", impact: -500, type: "bad", feedback: "Altíssimo risco e complexidade. Estatisticamente, mais de 90% dos iniciantes perdem dinheiro tentando operar curto prazo sem experiência." },
+                            { text: "Fundos Imobiliários (FIIs)", impact: 120, type: "good", feedback: "Ótima escolha! FIIs pagam dividendos mensais isentos de IR e têm volatilidade menor que ações, sendo ótimos para iniciantes." },
+                            { text: "Ações Penny Stock (Empresas desconhecidas)", impact: -200, type: "bad", feedback: "Armadilha comum. Empresas muito baratas geralmente estão assim por problemas graves. É especulação, não investimento." }
+                        ]
+                    },
+                    {
+                        title: "Tamanho da Reserva",
+                        desc: "Quanto dinheiro você deve manter na sua Reserva de Emergência para estar verdadeiramente protegido?",
+                        options: [
+                            { text: "O equivalente a 1 mês de gastos", impact: -80, type: "bad", feedback: "Insuficiente. Se você ficar desempregado, 1 mês pode não ser tempo suficiente para se recolocar no mercado." },
+                            { text: "O equivalente a 6 a 12 meses de gastos", impact: 100, type: "good", feedback: "Correto! Especialistas recomendam de 6 a 12 meses de despesas essenciais para cobrir imprevistos com tranquilidade." },
+                            { text: "Apenas o que sobra no final do mês", impact: -50, type: "bad", feedback: "Perigoso. Se não houver sobra, você não terá reserva. A reserva deve ser uma prioridade, não um residual." }
+                        ]
+                    },
+                    {
+                        title: "Cartão de Crédito",
+                        desc: "Você tem uma dívida no cartão de crédito com juros de 400% ao ano. O que fazer primeiro?",
+                        options: [
+                            { text: "Pagar o mínimo e continuar gastando", impact: -300, type: "bad", feedback: "Desastroso. Juros de cartão são os mais altos do mercado. Pagar o mínimo faz a dívida crescer exponencialmente." },
+                            { text: "Quitar a dívida imediatamente usando a reserva", impact: 150, type: "good", feedback: "Inteligente! Eliminar dívidas com juros altos é o melhor 'investimento' que você pode fazer. Ganho garantido de 400% a.a." },
+                            { text: "Parcelar a dívida em 12x no cartão", impact: -50, type: "neutral", feedback: "Melhor que o mínimo, mas ainda paga juros. O ideal é quitar à vista ou renegociar com taxa menor." }
+                        ]
+                    },
+                    {
+                        title: "Primeiro Aporte Regular",
+                        desc: "Você decidiu investir R$ 300,00 por mês. Qual é a estratégia mais poderosa para um iniciante?",
+                        options: [
+                            { text: "Investir tudo de uma vez quando juntar R$ 3.600", impact: -60, type: "bad", feedback: "Prejudicial. Deixar o dinheiro parado meses esperando acumular significa perder rendimentos todos os meses." },
+                            { text: "Investir R$ 300 todo mês sem falta (DCA)", impact: 130, type: "good", feedback: "Perfeito! Dollar Cost Averaging (aporte regular) é a estratégia mais comprovada. A consistência vence o timing de mercado." },
+                            { text: "Investir apenas quando o mercado cair", impact: -30, type: "neutral", feedback: "Difícil de executar. Tentar acertar o fundo do mercado geralmente resulta em ficar fora por muito tempo." }
+                        ]
+                    }
+                ]
+            },
+            {
+                name: "Nível 2: Investidor Intermediário",
+                color: "blue",
+                scenarios: [
+                    {
+                        title: "Análise Fundamentalista",
+                        desc: "Você analisa uma empresa. Ela lucra consistentemente, tem baixa dívida e paga bons dividendos. O P/L está historicamente baixo.",
+                        options: [
+                            { text: "Comprar e manter (Value Investing)", impact: 250, type: "good", feedback: "Warren Buffett aprova! Comprar boas empresas quando estão em 'promoção' é a essência do sucesso na bolsa." },
+                            { text: "Vender pois está 'barata demais'", impact: -50, type: "bad", feedback: "Erro de lógica. No longo prazo, o preço tende a refletir o valor real. Vender uma boa empresa apenas porque caiu é perder oportunidades." },
+                            { text: "Ignorar e comprar a ação que mais subiu hoje", impact: -100, type: "bad", feedback: "Isso é seguir manada. Comprar na alta histórica aumenta drasticamente seu risco de pagar caro demais." }
+                        ]
+                    },
+                    {
+                        title: "Rebalanceamento de Carteira",
+                        desc: "Suas ações subiram muito e agora representam 80% da sua carteira. Sua estratégia original era 50%. O que fazer?",
+                        options: [
+                            { text: "Vender o excedente e comprar Renda Fixa", impact: 150, type: "good", feedback: "Disciplina profissional! Realizar lucros na alta e mover para investimentos conservadores mantém seu risco controlado." },
+                            { text: "Comprar mais ações alavancado", impact: -300, type: "bad", feedback: "Ganância! Você aumentou demais a exposição ao risco. Se o mercado corrigir, seus prejuízos serão devastadores." },
+                            { text: "Não fazer nada", impact: 50, type: "neutral", feedback: "Sua carteira ficou desbalanceada. Embora tenha lucrado, você está correndo mais riscos do que planejou." }
+                        ]
+                    },
+                    {
+                        title: "Crise no Exterior",
+                        desc: "O mercado americano caiu 20%. Como sua carteira global (investimentos no exterior) reagiu?",
+                        options: [
+                            { text: "Pânico e venda total", impact: -200, type: "bad", feedback: "O erro clássico. Quem vende na crise, concretiza o prejuízo. Investimentos internacionais são para longo prazo." },
+                            { text: "Aportar mais recursos (Buy the Dip)", impact: 300, type: "good", feedback: "Visão de longo prazo! Crises são oportunidades de comprar ativos de qualidade com desconto." },
+                            { text: "Converter tudo para Dólar físico", impact: 0, type: "neutral", feedback: "Segurança extrema, mas você perdeu a chance de recomprar ativos baratos e esperar a recuperação." }
+                        ]
+                    },
+                    {
+                        title: "LCA e LCI: Isenção Fiscal",
+                        desc: "Você encontra um CDB rendendo 110% CDI e uma LCI rendendo 95% CDI. Ambos do mesmo banco e prazo. Qual escolher?",
+                        options: [
+                            { text: "CDB 110% CDI (maior rentabilidade bruta)", impact: -80, type: "bad", feedback: "Erro comum! O CDB tem Imposto de Renda regressivo (22,5% a 15%). A LCI é isenta de IR. 95% isento > 110% tributado." },
+                            { text: "LCI 95% CDI (isenta de IR)", impact: 120, type: "good", feedback: "Correto! A isenção de IR torna a LCI mais vantajosa. Para investidores na faixa de 27,5% de IR, 95% isento equivale a ~130% CDI bruto." },
+                            { text: "Dividir igualmente entre os dois", impact: 40, type: "neutral", feedback: "Razoável, mas você poderia maximizar o retorno colocando tudo na LCI isenta." }
+                        ]
+                    },
+                    {
+                        title: "Dividendos: Reinvestir ou Gastar?",
+                        desc: "Seus FIIs e ações pagaram R$ 500 em dividendos este mês. Qual a melhor decisão para construir patrimônio?",
+                        options: [
+                            { text: "Reinvestir automaticamente em novos cotas/ações", impact: 200, type: "good", feedback: "Brilhante! O efeito bola de neve dos dividendos reinvestidos é o motor dos juros compostos na renda variável." },
+                            { text: "Gastar como renda extra", impact: -50, type: "bad", feedback: "Curto-prazismo. Gastar dividendos impede o crescimento exponencial do patrimônio. O luxo vem depois da independência." },
+                            { text: "Guardar na poupança", impact: -30, type: "neutral", feedback: "Melhor que gastar, mas a poupança rende pouco. Reinvestir na bolsa geraria muito mais retorno." }
+                        ]
+                    },
+                    {
+                        title: "Diversificação Geográfica",
+                        desc: "100% do seu patrimônio está investido no Brasil. Um consultor sugere investir no exterior. Qual sua atitude?",
+                        options: [
+                            { text: "Recusar, confio apenas no mercado brasileiro", impact: -100, type: "bad", feedback: "Risco concentrado. Se o Brasil entrar em crise, seu patrimônio inteiro será afetado. Diversificação geográfica é proteção." },
+                            { text: "Alocar 20-30% em ETFs internacionais (IVVB11, BOVA11 global)", impact: 180, type: "good", feedback: "Excelente! ETFs internacionais dão exposição a empresas globais, moeda forte e reduzem o risco país da sua carteira." },
+                            { text: "Mover 80% para o exterior", impact: -50, type: "neutral", feedback: "Exagerado. Manter parte no Brasil também é importante para hedge cambial e oportunidades locais." }
+                        ]
+                    }
+                ]
+            },
+            {
+                name: "Nível 3: Investidor Avançado",
+                color: "purple",
+                scenarios: [
+                    {
+                        title: "Curva de Juros",
+                        desc: "O Banco Central sinaliza que vai parar de subir os juros. O que acontece com os títulos Prefixados que você comprou quando os juros estavam altos?",
+                        options: [
+                            { text: "Marcar na curva (Vender antes do vencimento)", impact: 200, type: "good", feedback: "Brilhante! Quando os juros futuros caem, o preço unitário dos títulos prefixados sobe, gerando ganho de capital antecipado." },
+                            { text: "Levar até o vencimento", impact: 100, type: "neutral", feedback: "Seguro e garantido, mas você deixou de ganhar a 'plusvalia' que poderia ter obtido vendendo na queda dos juros." },
+                            { text: "Vender imediatamente com prejuízo", impact: -100, type: "bad", feedback: "Erro grave. Prefixados tendem a valorizar quando os juros caem. Não há motivo para vender perdendo." }
+                        ]
+                    },
+                    {
+                        title: "Alavocagem Saudável",
+                        desc: "Uma oportunidade imobiliária exige empréstimo a 10% a.a. O imóvel gera aluguel líquido de 12% a.a. + valorização.",
+                        options: [
+                            { text: "Alavancar (Tomar empréstimo)", impact: 300, type: "good", feedback: "Spread financeiro positivo! Usar OPM (Other People's Money) para ganhar mais do que o custo da dívida é o segredo dos ricos." },
+                            { text: "Recusar a oportunidade", impact: 0, type: "neutral", feedback: "Conservador. Você evita dívidas, mas perde a alavancagem que multiplicaria seu patrimônio." },
+                            { text: "Usar todo o caixa pessoal", impact: 100, type: "bad", feedback: "Perdeu a liquidez. Às vezes é melhor manter seu caixa seguro e usar crédito barato se o retorno do ativo for maior." }
+                        ]
+                    },
+                    {
+                        title: "Derivativos: Proteção",
+                        desc: "Você tem muitas ações PETR4 e teme uma queda temporária no petróleo. Como se proteger sem vender as ações?",
+                        options: [
+                            { text: "Compra de Put (Opções)", impact: 150, type: "good", feedback: "Hedge perfeito! A Put funciona como um seguro. Se a ação cair, a Put valoriza e compensa o prejuízo da carteira." },
+                            { text: "Venda Coberta de Call", impact: 50, type: "neutral", feedback: "Gera renda (prêmio), mas limita seu ganho se o mercado subir e não protege totalmente contra quedas bruscas." },
+                            { text: "Não fazer nada", impact: -200, type: "bad", feedback: "Exposição total ao risco. Um investidor avançado deve saber se proteger (Hedge) em momentos de incerteza." }
+                        ]
+                    },
+                    {
+                        title: "Come-Cotas em Fundos",
+                        desc: "Você investe em um fundo de ações que cobra 2% de administração e tem 'come-cotas' semestral. Qual o impacto real?",
+                        options: [
+                            { text: "Ignorar, taxas pequenas não importam", impact: -120, type: "bad", feedback: "Grave erro! 2% ao ano parece pouco, mas em 20 anos pode consumir até 40% do seu rendimento composto. Taxas importam muito." },
+                            { text: "Migrar para ETFs com taxa de 0,2% a.a.", impact: 180, type: "good", feedback: "Correto! ETFs replicam índices com taxas muito menores. A diferença de 1,8% a.a. faz uma diferença colossal no longo prazo." },
+                            { text: "Negociar taxa menor com o gerente", impact: 60, type: "neutral", feedback: "Boa tentativa, mas a redução geralmente é pequena. Mudar para ETFs ou fundos indexados é mais eficaz." }
+                        ]
+                    },
+                    {
+                        title: "Dividend Yield vs Valorização",
+                        desc: "Empresa A paga 8% de dividendos mas não cresce. Empresa B paga 1% mas cresce 15% ao ano. Qual estratégia adotar?",
+                        options: [
+                            { text: "Empresa A (foco em renda imediata)", impact: -60, type: "bad", feedback: "Renda alta sem crescimento é armadilha. O dividend yield pode cair se o preço da ação despencar (yield trap)." },
+                            { text: "Empresa B (foco em crescimento + reinvestir dividendos)", impact: 200, type: "good", feedback: "Visão de longo prazo! Crescimento de lucro + dividendos reinvestidos criam muito mais valor total (Total Return) que só dividendos." },
+                            { text: "Misto 50/50", impact: 80, type: "neutral", feedback: "Razoável, mas em fase de acumulação, o crescimento tende a ser mais importante que a renda imediata." }
+                        ]
+                    },
+                    {
+                        title: "Swaps e Proteção Cambial",
+                        desc: "Você tem R$ 500.000 em ações e quer proteger contra uma queda de 15% sem vender os ativos. Qual instrumento usar?",
+                        options: [
+                            { text: "Swap de proteção (comprar put sintética)", impact: 150, type: "good", feedback: "Profissional! Swaps permitem proteger a carteira contra quedas específicas mantendo a exposição à alta. Custo-benefício eficiente." },
+                            { text: "Vender 50% e ficar em caixa", impact: -40, type: "neutral", feedback: "Funciona como proteção, mas você perde dividendos e pode perder o trem da alta se o mercado subir." },
+                            { text: "Comprar ouro físico", impact: -80, type: "bad", feedback: "Ouro não correlaciona diretamente com ações brasileiras. É uma proteção genérica, não um hedge eficiente para sua carteira." }
+                        ]
+                    }
+                ]
+            },
+            {
+                name: "Nível 4: Investidor Expert",
+                color: "amber",
+                scenarios: [
+                    {
+                        title: "Arbitragem e Moedas",
+                        desc: "O Dólar está muito forte. Seus investimentos offshore valem muito em Reais. O cenário indica queda do Dólar.",
+                        options: [
+                            { text: "Hedge Cambial (Travar taxa de câmbio)", impact: 100, type: "good", feedback: "Profissional. Você protegeu seus ganhos em reais contra a desvalorização da moeda sem precisar vender o ativo." },
+                            { text: "Trazer todo dinheiro para o Brasil", impact: -300, type: "bad", feedback: "Timing errado. Se o dólar cair depois, você trouxe menos recursos e ainda pagou imposto à toa." },
+                            { text: "Manter 100% exposto", impact: -100, type: "bad", feedback: "Volatilidade cambial pode destruir meses de performance. Experts gerenciam o risco cambial ativamente." }
+                        ]
+                    },
+                    {
+                        title: "Private Equity / Venture Capital",
+                        desc: "Convite para investir em uma Startup pré-IPO. Alto risco, potencial de 10x. Isso cabe na sua carteira?",
+                        options: [
+                            { text: "Alocar pequena % (Capital de Risco)", impact: 500, type: "good", feedback: "Assimetria positiva! Perde-se 1x o valor, mas ganha-se 10x. Ideal para Experts com carteira diversificada." },
+                            { text: "Apostar a aposentadoria toda", impact: -1000, type: "bad", feedback: "Amadorismo. Ativos ilíquidos e arriscados exigem posição pequena. Nunca aposte o essencial." },
+                            { text: "Recusar por ser 'aposta'", impact: 0, type: "neutral", feedback: "Conservador. Experts buscam assimetria de retorno, não apenas segurança absoluta." }
+                        ]
+                    },
+                    {
+                        title: "Legado e Sucessão",
+                        desc: "Seu patrimônio é grande. Como otimizar a passagem de bens para herdeiros evitando Inventário caro?",
+                        options: [
+                            { text: "Holdings Familiares e Previdência Privada (VGBL)", impact: 400, type: "good", feedback: "Planejamento sucessório é a fase final da gestão de riqueza. Eficiência tributária e agilidade para seus herdeiros." },
+                            { text: "Deixar para resolver depois", impact: -500, type: "bad", feedback: "Negligência. O Leão e custas judiciais podem comer até 20% do seu legado deixado para a família." },
+                            { text: "Doar tudo em vida", impact: 0, type: "neutral", feedback: "Radical. Resolve o inventário, mas tira seu controle sobre os bens enquanto você ainda está vivo." }
+                        ]
+                    },
+                    {
+                        title: "Colheita de Prejuízos (Tax Harvesting)",
+                        desc: "Você tem R$ 50.000 de prejuízo acumulado em ações. O que fazer para otimizar seus impostos?",
+                        options: [
+                            { text: "Realizar o prejuízo vendendo as ações e recomprar após 30 dias", impact: 250, type: "good", feedback: "Brilhante! Tax Loss Harvesting permite usar prejuízos para abater ganhos futuros, reduzindo legalmente sua carga tributária." },
+                            { text: "Esperar as ações recuperarem", impact: -80, type: "bad", feedback: "Pode demorar anos ou nunca acontecer. Enquanto espera, perde a oportunidade de usar o prejuízo fiscalmente." },
+                            { text: "Ignorar, prejuízo não importa", impact: -100, type: "bad", feedback: "Prejuízo realizado tem valor fiscal! Ignorar isso é deixar dinheiro na mesa que o governo te devolveria em imposto." }
+                        ]
+                    },
+                    {
+                        title: "Estrutura Offshore",
+                        desc: "Seu patrimônio ultrapassou R$ 5 milhões. Uma estrutura offshore em jurisdiction amigável pode trazer benefícios?",
+                        options: [
+                            { text: "Criar holding offshore para diversificação e proteção patrimonial", impact: 300, type: "good", feedback: "Correto para este patamar! Offshores legais oferecem proteção contra risco país, acesso a investimentos globais e planejamento sucessório." },
+                            { text: "Sonegar impostos usando offshores", impact: -2000, type: "bad", feedback: "Ilegal e arriscado! Com CRS e troca automática de informações, a chance de ser pego é altíssima. Multas e prisão são reais." },
+                            { text: "Manter tudo no Brasil por patriotismo", impact: -50, type: "neutral", feedback: "Emocional, não racional. Diversificação geográfica legal é gestão de risco, não traição." }
+                        ]
+                    },
+                    {
+                        title: "Family Office",
+                        desc: "Patrimônio de R$ 20 milhões. Gestores cobram 2% a.a. Você está insatisfeito com os resultados. Qual decisão tomar?",
+                        options: [
+                            { text: "Montar Family Office próprio com equipe interna", impact: 400, type: "good", feedback: "Acima de R$ 15-20M, Family Office próprio faz sentido. Reduz custos, aumenta controle e personaliza a estratégia para sua família." },
+                            { text: "Continuar com o mesmo gestor reclamando", impact: -200, type: "bad", feedback: "Passividade custosa. 2% sobre R$ 20M são R$ 400.000/ano. Se o gestor não performa, troque-o imediatamente." },
+                            { text: "Distribuir o dinheiro entre 10 gestores diferentes", impact: -100, type: "neutral", feedback: "Piora o problema. Mais gestores = mais taxas, mais complexidade e dificuldade de medir performance real." }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        }
+
+        function updateUI() {
+            document.getElementById('global-score').innerText = formatCurrency(gameState.balance);
+            if(document.getElementById('current-balance')) {
+                document.getElementById('current-balance').innerText = formatCurrency(gameState.balance);
+            }
+        }
+
+        function switchScreen(screenId) {
+            ['screen-intro', 'screen-scenario', 'screen-final'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        function startGame() {
+            playSound('click');
+            gameState.currentPhase = 0;
+            gameState.balance = 1000;
+            gameState.choices = [];
+            updateUI();
+            loadScenario();
+        }
+
+        function getLevelIndex() {
+            return Math.floor(gameState.currentPhase / 6);
+        }
+
+        function loadScenario() {
+            const levelIdx = getLevelIndex();
+            const scenarioIdx = gameState.currentPhase % 6;
+            const levelData = levels[levelIdx];
+            const scenarioData = levelData.scenarios[scenarioIdx];
+
+            const badge = document.getElementById('level-badge');
+            badge.innerText = levelData.name;
+            badge.className = `inline-block px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider bg-${levelData.color}-500/20 text-${levelData.color}-400 border border-${levelData.color}-500/30 mb-2`;
+
+            const progressPct = ((gameState.currentPhase + 1) / gameState.totalPhases) * 100;
+            document.getElementById('level-progress').style.width = `${progressPct}%`;
+            document.getElementById('level-progress').className = `h-1.5 transition-all duration-500 bg-${levelData.color}-500`;
+
+            document.getElementById('scenario-title').innerText = scenarioData.title;
+            document.getElementById('scenario-desc').innerText = scenarioData.desc;
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            scenarioData.options.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = "btn-option w-full text-left p-5 rounded-xl border border-white/10 bg-slate-800/40 hover:bg-slate-700/60 group flex justify-between items-center";
+                btn.onclick = () => handleChoice(opt);
+                btn.innerHTML = `
+                    <span class="font-medium text-slate-200 group-hover:text-white text-lg">${opt.text}</span>
+                    <div class="w-6 h-6 rounded-full border-2 border-slate-600 group-hover:border-${levelData.color}-400 flex items-center justify-center">
+                        <div class="w-2.5 h-2.5 rounded-full bg-${levelData.color}-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                `;
+                container.appendChild(btn);
+            });
+
+            switchScreen('screen-scenario');
+        }
+
+        function handleChoice(option) {
+            playSound(option.type === 'good' ? 'success' : (option.type === 'bad' ? 'error' : 'click'));
+
+            gameState.balance += option.impact;
+            if(gameState.balance < 0) gameState.balance = 0;
+            
+            gameState.choices.push({
+                type: option.type,
+                impact: option.impact,
+                level: getLevelIndex()
+            });
+
+            updateUI();
+
+            const modal = document.getElementById('modal-feedback');
+            const border = document.getElementById('feedback-border');
+            const iconBg = document.getElementById('feedback-icon-bg');
+            const title = document.getElementById('feedback-title');
+            const msg = document.getElementById('feedback-message');
+            const change = document.getElementById('feedback-change');
+            const nextBtn = document.getElementById('next-level-btn');
+
+            modal.classList.remove('hidden');
+            
+            if (option.type === 'good') {
+                border.style.borderColor = '#10b981';
+                iconBg.className = "w-12 h-12 rounded-full flex items-center justify-center text-2xl bg-emerald-500/20 text-emerald-400";
+                iconBg.innerText = "🚀";
+                title.innerText = "Decisão Inteligente";
+                title.className = "text-2xl font-bold text-emerald-400 mb-2";
+                change.className = "font-mono font-bold text-lg text-emerald-400";
+                nextBtn.className = "w-full py-3 px-4 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-500 transition-colors";
+            } else if (option.type === 'bad') {
+                border.style.borderColor = '#ef4444';
+                iconBg.className = "w-12 h-12 rounded-full flex items-center justify-center text-2xl bg-red-500/20 text-red-400";
+                iconBg.innerText = "️";
+                title.innerText = "Erro de Estratégia";
+                title.className = "text-2xl font-bold text-red-400 mb-2";
+                change.className = "font-mono font-bold text-lg text-red-400";
+                nextBtn.className = "w-full py-3 px-4 bg-slate-700 text-white font-bold rounded-xl hover:bg-slate-600 transition-colors";
+            } else {
+                border.style.borderColor = '#3b82f6';
+                iconBg.className = "w-12 h-12 rounded-full flex items-center justify-center text-2xl bg-blue-500/20 text-blue-400";
+                iconBg.innerText = "⚖️";
+                title.innerText = "Resultado Neutro";
+                title.className = "text-2xl font-bold text-blue-400 mb-2";
+                change.className = "font-mono font-bold text-lg text-slate-300";
+                nextBtn.className = "w-full py-3 px-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-500 transition-colors";
+            }
+
+            msg.innerText = option.feedback;
+            const sign = option.impact >= 0 ? "+" : "";
+            change.innerText = `${sign} ${formatCurrency(option.impact)}`;
+        }
+
+        function closeFeedback() {}
+
+        function nextPhase() {
+            playSound('click');
+            document.getElementById('modal-feedback').classList.add('hidden');
+            
+            gameState.currentPhase++;
+            
+            if (gameState.currentPhase < gameState.totalPhases) {
+                loadScenario();
+            } else {
+                showFinalScreen();
+            }
+        }
+
+        function showFinalScreen() {
+            playSound('win');
+            
+            // Calculate stats
+            let goodCount = 0, badCount = 0, neutralCount = 0;
+            let totalImpact = 0;
+            let maxPossibleGain = 0;
+            let minPossibleLoss = 0;
+            
+            gameState.choices.forEach(c => {
+                if (c.type === 'good') goodCount++;
+                else if (c.type === 'bad') badCount++;
+                else neutralCount++;
+                totalImpact += c.impact;
+            });
+
+            // Calculate max possible (all good choices)
+            levels.forEach(level => {
+                level.scenarios.forEach(scenario => {
+                    let bestImpact = -Infinity;
+                    let worstImpact = Infinity;
+                    scenario.options.forEach(opt => {
+                        if (opt.impact > bestImpact) bestImpact = opt.impact;
+                        if (opt.impact < worstImpact) worstImpact = opt.impact;
+                    });
+                    maxPossibleGain += bestImpact;
+                    minPossibleLoss += worstImpact;
+                });
+            });
+
+            const finalBalance = gameState.balance;
+            const startBalance = 1000;
+            const actualGain = finalBalance - startBalance;
+
+            // Classification
+            const goodPercentage = (goodCount / gameState.totalPhases) * 100;
+            let classification, classColor, classBg, classBorder;
+            
+            if (goodPercentage >= 85) {
+                classification = "🏆 Investidor Expert (Top 5%)";
+                classColor = "text-amber-400";
+                classBg = "bg-amber-500/10";
+                classBorder = "border-amber-500";
+            } else if (goodPercentage >= 70) {
+                classification = "🥇 Investidor Avançado";
+                classColor = "text-emerald-400";
+                classBg = "bg-emerald-500/10";
+                classBorder = "border-emerald-500";
+            } else if (goodPercentage >= 50) {
+                classification = "📊 Investidor Intermediário";
+                classColor = "text-blue-400";
+                classBg = "bg-blue-500/10";
+                classBorder = "border-blue-500";
+            } else if (goodPercentage >= 30) {
+                classification = "📚 Investidor em Formação";
+                classColor = "text-orange-400";
+                classBg = "bg-orange-500/10";
+                classBorder = "border-orange-500";
+            } else {
+                classification = "⚠️ Investidor Iniciante (Risco Alto)";
+                classColor = "text-red-400";
+                classBg = "bg-red-500/10";
+                classBorder = "border-red-500";
+            }
+
+            document.getElementById('final-score').innerText = formatCurrency(finalBalance);
+            document.getElementById('classification-text').innerText = classification;
+            document.getElementById('classification-text').className = `text-xl font-bold ${classColor}`;
+            const badge = document.getElementById('classification-badge');
+            badge.className = `inline-block px-6 py-3 rounded-xl border-2 mb-8 ${classBg} ${classBorder}`;
+
+            // Stats
+            document.getElementById('stat-good').innerText = goodCount;
+            document.getElementById('stat-neutral').innerText = neutralCount;
+            document.getElementById('stat-bad').innerText = badCount;
+
+            const gainSign = actualGain >= 0 ? "+" : "";
+            document.getElementById('max-gain').innerText = `+ ${formatCurrency(maxPossibleGain)}`;
+            document.getElementById('real-gain').innerText = `${gainSign} ${formatCurrency(actualGain)}`;
+            
+            const lossAvoided = actualGain - minPossibleLoss;
+            document.getElementById('loss-avoided').innerText = `+ ${formatCurrency(lossAvoided)}`;
+
+            // Bars
+            setTimeout(() => {
+                const maxBar = Math.min(100, Math.max(0, (maxPossibleGain / 5000) * 100));
+                const realBar = Math.min(100, Math.max(0, (actualGain / maxPossibleGain) * 100));
+                const lossBar = Math.min(100, Math.max(0, (lossAvoided / (maxPossibleGain - minPossibleLoss)) * 100));
+                
+                document.getElementById('max-gain-bar').style.width = `${maxBar}%`;
+                document.getElementById('real-gain-bar').style.width = `${realBar}%`;
+                document.getElementById('loss-avoided-bar').style.width = `${lossBar}%`;
+            }, 300);
+
+            // Draw Chart
+            drawPerformanceChart();
+
+            switchScreen('screen-final');
+        }
+
+        function drawPerformanceChart() {
+            const canvas = document.getElementById('performance-chart');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width - 48; // account for padding
+            canvas.height = 200;
+            
+            const w = canvas.width;
+            const h = canvas.height;
+            const padding = 40;
+            const chartW = w - padding * 2;
+            const chartH = h - padding * 2;
+
+            // Clear
+            ctx.clearRect(0, 0, w, h);
+
+            // Data: cumulative balance per phase
+            let cumulativeBalance = [1000];
+            let currentBal = 1000;
+            gameState.choices.forEach(c => {
+                currentBal += c.impact;
+                if (currentBal < 0) currentBal = 0;
+                cumulativeBalance.push(currentBal);
+            });
+
+            // Calculate max/min for scaling
+            const maxVal = Math.max(...cumulativeBalance, 2000);
+            const minVal = 0;
+            const range = maxVal - minVal;
+
+            // Draw grid
+            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = padding + (chartH / 4) * i;
+                ctx.beginPath();
+                ctx.moveTo(padding, y);
+                ctx.lineTo(w - padding, y);
+                ctx.stroke();
+                
+                // Labels
+                const val = maxVal - (range / 4) * i;
+                ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                ctx.font = '10px Inter';
+                ctx.textAlign = 'right';
+                ctx.fillText(formatCurrency(val).replace('R$', ''), padding - 5, y + 4);
+            }
+
+            // Phase labels
+            ctx.fillStyle = 'rgba(255,255,255,0.3)';
+            ctx.font = '9px Inter';
+            ctx.textAlign = 'center';
+            const phaseLabels = ['Início', 'N1', 'N2', 'N3', 'N4', 'Fim'];
+            const stepCount = cumulativeBalance.length - 1;
+            const stepX = chartW / stepCount;
+            
+            for (let i = 0; i <= stepCount; i++) {
+                const x = padding + stepX * i;
+                if (i % 6 === 0 || i === stepCount) {
+                    ctx.fillText(i === 0 ? 'Início' : (i === stepCount ? 'Fim' : `F${i}`), x, h - 10);
+                }
+            }
+
+            // Level separators
+            const levelColors = ['rgba(16,185,129,0.1)', 'rgba(59,130,246,0.1)', 'rgba(168,85,247,0.1)', 'rgba(245,158,11,0.1)'];
+            for (let l = 0; l < 4; l++) {
+                const startX = padding + stepX * (l * 6);
+                const endX = padding + stepX * ((l + 1) * 6);
+                ctx.fillStyle = levelColors[l];
+                ctx.fillRect(startX, padding, endX - startX, chartH);
+            }
+
+            // Draw line
+            ctx.beginPath();
+            ctx.strokeStyle = '#10b981';
+            ctx.lineWidth = 3;
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+
+            cumulativeBalance.forEach((val, i) => {
+                const x = padding + stepX * i;
+                const y = padding + chartH - ((val - minVal) / range) * chartH;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+
+            // Gradient fill under line
+            const gradient = ctx.createLinearGradient(0, padding, 0, padding + chartH);
+            gradient.addColorStop(0, 'rgba(16,185,129,0.3)');
+            gradient.addColorStop(1, 'rgba(16,185,129,0)');
+            
+            ctx.beginPath();
+            cumulativeBalance.forEach((val, i) => {
+                const x = padding + stepX * i;
+                const y = padding + chartH - ((val - minVal) / range) * chartH;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.lineTo(padding + stepX * (cumulativeBalance.length - 1), padding + chartH);
+            ctx.lineTo(padding, padding + chartH);
+            ctx.closePath();
+            ctx.fillStyle = gradient;
+            ctx.fill();
+
+            // Draw dots at key points
+            cumulativeBalance.forEach((val, i) => {
+                const x = padding + stepX * i;
+                const y = padding + chartH - ((val - minVal) / range) * chartH;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = i === cumulativeBalance.length - 1 ? '#f59e0b' : '#10b981';
+                ctx.fill();
+                ctx.strokeStyle = '#0f172a';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+
+            // Reference line for starting balance
+            const startY = padding + chartH - ((1000 - minVal) / range) * chartH;
+            ctx.beginPath();
+            ctx.setLineDash([5, 5]);
+            ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+            ctx.lineWidth = 1;
+            ctx.moveTo(padding, startY);
+            ctx.lineTo(w - padding, startY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            ctx.fillStyle = 'rgba(255,255,255,0.3)';
+            ctx.font = '9px Inter';
+            ctx.textAlign = 'left';
+            ctx.fillText('Capital Inicial', padding + 5, startY - 5);
+        }
+
+        // Intro animation
+        window.addEventListener('load', () => {
+            const introScreen = document.getElementById('intro-screen');
+            const progressBar = document.getElementById('intro-progress');
+            
+            setTimeout(() => {
+                progressBar.style.width = '100%';
+            }, 100);
+
+            setTimeout(() => {
+                introScreen.style.opacity = '0';
+                setTimeout(() => {
+                    introScreen.style.display = 'none';
+                    document.getElementById('screen-intro').classList.remove('hidden');
+                }, 1000);
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
+
