@@ -2,1023 +2,1274 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Mestre dos Investimentos: A Jornada Completa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Studio → Cordova Android Converter</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://api.fontsource.org/v1/css/google/inter.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5/400/latin.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5/600/latin.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/inter@5/700/latin.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5/400/latin.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
-            color: #e2e8f0;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #1e293b; }
-        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
-        .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-        }
-        .btn-option {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-option:active {
-            transform: scale(0.98);
-        }
-        .btn-option::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 0%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
-            transition: width 0.5s;
-        }
-        .btn-option:hover::after, .btn-option:active::after { width: 100%; }
-        .fade-in-up {
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .glow-text { text-shadow: 0 0 20px rgba(16, 185, 129, 0.3); }
-        .intro-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            background-color: #0f172a;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 1s ease-out;
-        }
-        .bar-animate {
-            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        /* Mobile optimizations */
-        @media (max-width: 640px) {
-            .glass-card {
-                border-radius: 1rem;
-            }
-            h1 {
-                font-size: 1.125rem;
-            }
-            h2 {
-                font-size: 1.75rem !important;
-            }
-            h3 {
-                font-size: 1.25rem !important;
-            }
-            p {
-                font-size: 0.95rem !important;
-            }
-            .mobile-text-sm {
-                font-size: 0.875rem !important;
-            }
-            .mobile-padding {
-                padding: 1rem !important;
-            }
-            .mobile-full {
-                width: 100%;
-            }
-        }
+        * { font-family: 'Inter', sans-serif; }
+        code, pre { font-family: 'JetBrains Mono', monospace; }
+        .drop-zone { transition: all 0.3s ease; }
+        .drop-zone.dragover { border-color: #8b5cf6; background: rgba(139, 92, 246, 0.05); transform: scale(1.02); }
+        .progress-bar { transition: width 0.3s ease; }
+        .step-active { border-color: #8b5cf6; background: rgba(139, 92, 246, 0.1); }
+        .step-done { border-color: #10b981; background: rgba(16, 185, 129, 0.1); }
+        @keyframes pulse-ring { 0% { transform: scale(0.95); opacity: 0.5; } 50% { transform: scale(1.05); opacity: 0.3; } 100% { transform: scale(0.95); opacity: 0.5; } }
+        .pulse-ring { animation: pulse-ring 2s infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .float-anim { animation: float 3s ease-in-out infinite; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-up { animation: slideUp 0.5s ease forwards; }
+        @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .gradient-bg { background-size: 200% 200%; animation: gradient 6s ease infinite; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .glass-dark { background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: rgba(139, 92, 246, 0.5); border-radius: 3px; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col bg-[url('https://images.unsplash.com/photo-1611974765270-ca12586343bb?q=80&w=2064&auto=format&fit=crop')] bg-cover bg-center bg-no-repeat bg-fixed">
-    
-    <!-- Intro Screen (5 Seconds) -->
-    <div id="intro-screen" class="intro-overlay">
-        <div class="text-center px-4 sm:px-6 max-w-lg w-full fade-in-up">
-            <img src="homem.png" 
-                 alt="Investidor confuso" 
-                 class="w-full max-w-sm mx-auto h-auto rounded-xl sm:rounded-2xl shadow-2xl mb-4 sm:mb-6 border border-white/10">
-            <div class="w-full max-w-xs mx-auto bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                <div id="intro-progress" class="bg-emerald-500 h-1.5 rounded-full transition-all duration-[4800ms] ease-linear" style="width: 0%"></div>
-            </div>
-        </div>
+<body class="bg-gray-950 text-white min-h-screen">
+    <div class="fixed inset-0 gradient-bg" style="background: linear-gradient(135deg, #0f0a1a 0%, #1a0a2e 25%, #0d1b2a 50%, #1a0a2e 75%, #0f0a1a 100%);"></div>
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-purple-500/10 rounded-full blur-3xl pulse-ring"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pulse-ring" style="animation-delay: 1s;"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-violet-500/5 rounded-full blur-3xl pulse-ring" style="animation-delay: 0.5s;"></div>
     </div>
 
-    <div class="fixed inset-0 bg-slate-900/90 z-0"></div>
-
-    <!-- Header -->
-    <header class="relative z-10 border-b border-white/10 bg-slate-900/80 backdrop-blur-md sticky top-0">
-        <div class="max-w-5xl mx-auto px-3 sm:px-4 py-3 sm:py-4 flex justify-between items-center gap-2">
-            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center shadow-lg shadow-emerald-500/20 flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                    </svg>
+    <div class="relative z-10 min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="glass border-b border-white/5">
+            <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-6.356-7.444m0 0H12"/></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">CordovaPack</h1>
+                        <p class="text-xs text-gray-500">AI Studio → Android APK</p>
+                    </div>
                 </div>
-                <div class="min-w-0">
-                    <h1 class="text-base sm:text-xl font-bold text-white tracking-tight truncate">InvestPro <span class="text-emerald-400">Journey</span></h1>
-                    <p class="text-[10px] sm:text-xs text-slate-400 uppercase tracking-wider hidden sm:block">Simulador Profissional</p>
+                <div class="flex items-center gap-2">
+                    <span class="px-3 py-1 rounded-full bg-green-500/10 text-green-400 text-xs font-medium border border-green-500/20">v2.0 Free</span>
                 </div>
             </div>
-            <div class="flex items-center gap-3 sm:gap-6 flex-shrink-0">
-                <div class="hidden sm:flex flex-col items-end">
-                    <span class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Patrimônio Líquido</span>
-                    <span id="global-score" class="text-lg sm:text-2xl font-mono font-bold text-emerald-400 glow-text">R$ 0,00</span>
-                </div>
-                <div class="flex flex-col items-end sm:hidden">
-                    <span id="mobile-score" class="text-sm font-mono font-bold text-emerald-400">R$ 0,00</span>
-                </div>
-                <button onclick="toggleSound()" id="sound-btn" class="p-2 rounded-full hover:bg-white/10 transition-colors text-slate-400">
-                    <svg id="icon-sound-on" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                    </svg>
-                    <svg id="icon-sound-off" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-    </header>
+        </header>
 
-    <!-- Main Content -->
-    <main class="relative z-10 flex-grow flex items-center justify-center p-3 sm:p-4 md:p-8">
-        <div id="game-container" class="w-full max-w-4xl">
-            
-            <!-- Intro Screen (Game Start) -->
-            <div id="screen-intro" class="glass-card rounded-xl sm:rounded-2xl p-5 sm:p-8 md:p-12 text-center fade-in-up hidden">
-                <div class="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-emerald-500/10 mb-4 sm:mb-6 ring-1 ring-emerald-500/50">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 sm:h-10 sm:w-10 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                    </svg>
-                </div>
-                <h2 class="text-2xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 text-white">Domine o Mercado Financeiro</h2>
-                <p class="text-base sm:text-lg text-slate-300 mb-6 sm:mb-8 max-w-2xl mx-auto leading-relaxed px-2">
-                    Evolua de um iniciante curioso a um expert em alocação de ativos. 
-                    Tome decisões estratégicas, gerencie riscos e maximize seus retornos em 4 níveis de dificuldade.
-                </p>
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-6 sm:mb-10">
-                    <div class="bg-slate-800/50 p-3 sm:p-4 rounded-lg sm:rounded-xl border border-white/5">
-                        <div class="text-emerald-400 font-bold text-lg sm:text-xl">Nível 1</div>
-                        <div class="text-[10px] sm:text-xs text-slate-400">Iniciante</div>
-                    </div>
-                    <div class="bg-slate-800/50 p-3 sm:p-4 rounded-lg sm:rounded-xl border border-white/5">
-                        <div class="text-blue-400 font-bold text-lg sm:text-xl">Nível 2</div>
-                        <div class="text-[10px] sm:text-xs text-slate-400">Intermediário</div>
-                    </div>
-                    <div class="bg-slate-800/50 p-3 sm:p-4 rounded-lg sm:rounded-xl border border-white/5">
-                        <div class="text-purple-400 font-bold text-lg sm:text-xl">Nível 3</div>
-                        <div class="text-[10px] sm:text-xs text-slate-400">Avançado</div>
-                    </div>
-                    <div class="bg-slate-800/50 p-3 sm:p-4 rounded-lg sm:rounded-xl border border-white/5">
-                        <div class="text-amber-400 font-bold text-lg sm:text-xl">Nível 4</div>
-                        <div class="text-[10px] sm:text-xs text-slate-400">Expert</div>
-                    </div>
-                </div>
-                <button onclick="startGame()" class="group relative inline-flex items-center justify-center w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-bold text-white transition-all duration-200 bg-emerald-600 rounded-xl sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-600 hover:bg-emerald-500 hover:shadow-lg hover:shadow-emerald-500/30 active:scale-95">
-                    Iniciar Trajetória
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5 ml-2 -mr-1 transition-transform group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                    </svg>
-                </button>
+        <!-- Main Content -->
+        <main class="flex-1 max-w-6xl mx-auto w-full px-4 py-8">
+            <!-- Hero Section -->
+            <div class="text-center mb-10 slide-up">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">AI Studio App</span>
+                    <br>para Android APK
+                </h2>
+                <p class="text-gray-400 text-lg max-w-2xl mx-auto">Converta seu app criado no Google AI Studio para um projeto Cordova pronto para compilar como APK Android. 100% no navegador, gratuito.</p>
             </div>
 
-            <!-- Scenario Screen -->
-            <div id="screen-scenario" class="hidden glass-card rounded-xl sm:rounded-2xl overflow-hidden fade-in-up">
-                <div class="w-full bg-slate-800 h-1.5">
-                    <div id="level-progress" class="bg-emerald-500 h-1.5 transition-all duration-500" style="width: 25%"></div>
+            <!-- Steps -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div id="step1" class="glass-dark rounded-2xl p-6 border-l-4 border-purple-500 transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-400 font-bold text-sm">1</div>
+                        <h3 class="font-semibold text-purple-400">Upload do ZIP</h3>
+                    </div>
+                    <p class="text-sm text-gray-400">Envie o .zip exportado do Google AI Studio com seu app web</p>
                 </div>
-                <div class="p-4 sm:p-6 md:p-10">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-3 sm:gap-4">
-                        <div class="w-full sm:w-auto">
-                            <span id="level-badge" class="inline-block px-2 sm:px-3 py-1 rounded-md text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 mb-2">Nível 1: Iniciante</span>
-                            <h3 id="scenario-title" class="text-lg sm:text-2xl md:text-3xl font-bold text-white leading-tight">Título do Cenário</h3>
+                <div id="step2" class="glass-dark rounded-2xl p-6 border-l-4 border-gray-700 transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded-full bg-gray-700/20 flex items-center justify-center text-gray-500 font-bold text-sm">2</div>
+                        <h3 class="font-semibold text-gray-500">Configuração</h3>
+                    </div>
+                    <p class="text-sm text-gray-400">Configure nome, ID do pacote, ícone e versão do app</p>
+                </div>
+                <div id="step3" class="glass-dark rounded-2xl p-6 border-l-4 border-gray-700 transition-all duration-300">
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded-full bg-gray-700/20 flex items-center justify-center text-gray-500 font-bold text-sm">3</div>
+                        <h3 class="font-semibold text-gray-500">Download Cordova</h3>
+                    </div>
+                    <p class="text-sm text-gray-400">Baixe o projeto Cordova pronto para gerar o APK</p>
+                </div>
+            </div>
+
+            <!-- Upload Zone -->
+            <div id="uploadSection" class="max-w-2xl mx-auto">
+                <label for="fileInput" id="dropZone" class="drop-zone border-2 border-dashed border-gray-700 rounded-2xl p-12 text-center cursor-pointer hover:border-purple-500/50 block">
+                    <input type="file" id="fileInput" accept=".zip" style="position:absolute;width:0;height:0;opacity:0;pointer-events:none;">
+                    <div class="float-anim inline-block mb-4">
+                        <svg class="w-16 h-16 text-purple-400/60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m0 0l3-3"/></svg>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Arraste seu .zip aqui</h3>
+                    <p class="text-gray-400 mb-4">ou clique para selecionar</p>
+                    <p class="text-xs text-gray-600">Arquivo .zip exportado do Google AI Studio</p>
+                </label>
+
+                <!-- File Info -->
+                <div id="fileInfo" class="hidden mt-6 glass-dark rounded-2xl p-6 slide-up">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-purple-500/20 rounded-xl flex items-center justify-center">
+                                <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            </div>
+                            <div>
+                                <h4 id="fileName" class="font-semibold text-white">app.zip</h4>
+                                <p id="fileSize" class="text-sm text-gray-400">0 KB</p>
+                            </div>
                         </div>
-                        <div class="bg-slate-800/80 px-3 sm:px-4 py-2 rounded-lg border border-white/10 w-full sm:w-auto text-center sm:text-left">
-                            <span class="text-[10px] text-slate-400 block">Capital Disponível</span>
-                            <span id="current-balance" class="text-base sm:text-xl font-mono font-bold text-white">R$ 1.000,00</span>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3 sm:gap-4 mb-6 sm:mb-8">
-                        <div class="bg-blue-500/10 p-2 sm:p-3 rounded-lg border border-blue-500/20 flex-shrink-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <p id="scenario-desc" class="text-sm sm:text-base md:text-lg text-slate-300 leading-relaxed">Descrição...</p>
-                    </div>
-                    <div id="options-container" class="grid grid-cols-1 gap-3 sm:gap-4"></div>
-                </div>
-            </div>
-
-            <!-- Feedback Modal -->
-            <div id="modal-feedback" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/90 sm:bg-slate-900/80 backdrop-blur-sm">
-                <div class="glass-card w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl p-5 sm:p-8 border-t-4 sm:border-t-4 transform translate-y-0" id="feedback-border">
-                    <!-- Mobile pull indicator -->
-                    <div class="w-10 h-1 bg-slate-600 rounded-full mx-auto mb-4 sm:hidden"></div>
-                    <div class="flex justify-between items-start mb-4 sm:mb-6">
-                        <div id="feedback-icon-bg" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-xl sm:text-2xl bg-emerald-500/20 text-emerald-400 flex-shrink-0">🚀</div>
-                        <button onclick="closeFeedback()" class="text-slate-400 hover:text-white p-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
+                        <button id="removeFile" class="text-gray-500 hover:text-red-400 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                         </button>
                     </div>
-                    <h3 id="feedback-title" class="text-lg sm:text-2xl font-bold text-white mb-2">Resultado</h3>
-                    <p id="feedback-message" class="text-sm sm:text-base text-slate-300 mb-4 sm:mb-6 leading-relaxed">Explicação...</p>
-                    <div class="bg-slate-800/50 rounded-xl p-3 sm:p-4 border border-white/5 mb-4 sm:mb-6">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs sm:text-sm text-slate-400">Impacto no Patrimônio</span>
-                            <span id="feedback-change" class="font-mono font-bold text-sm sm:text-lg">+ R$ 0,00</span>
-                        </div>
+                    <!-- File contents preview -->
+                    <div id="fileContents" class="mt-4 max-h-40 overflow-y-auto rounded-lg bg-black/20 p-3">
+                        <p class="text-xs text-gray-500 mb-2">Conteúdo do ZIP:</p>
+                        <ul id="fileList" class="text-xs font-mono text-gray-400 space-y-1"></ul>
                     </div>
-                    <button id="next-level-btn" onclick="nextPhase()" class="w-full py-3 px-4 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-200 transition-colors active:scale-95 text-sm sm:text-base">
-                        Continuar Jornada
+                    <button id="proceedBtn" class="mt-4 w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl font-semibold hover:from-purple-500 hover:to-blue-500 transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+                        Continuar →
                     </button>
-                    <!-- Safe area for mobile -->
-                    <div class="h-4 sm:hidden"></div>
                 </div>
             </div>
 
-            <!-- Final Screen -->
-            <div id="screen-final" class="hidden glass-card rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-12 text-center fade-in-up">
-                <div class="mb-4 sm:mb-6 relative inline-block">
-                    <div class="absolute inset-0 bg-amber-500 blur-2xl opacity-20 rounded-full"></div>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 sm:h-24 sm:w-24 text-amber-400 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                    </svg>
-                </div>
-                
-                <h2 id="final-title" class="text-xl sm:text-4xl font-bold mb-2 text-white">Resultado Final</h2>
-                <p id="final-subtitle" class="text-sm sm:text-base text-slate-400 mb-4 sm:mb-6">Análise completa do seu desempenho.</p>
-                
-                <div class="bg-gradient-to-r from-slate-800 to-slate-900 rounded-xl sm:rounded-2xl p-5 sm:p-8 border border-white/10 mb-6 sm:mb-8 mx-auto">
-                    <p class="text-xs sm:text-sm text-slate-400 uppercase tracking-widest mb-2">Patrimônio Final Acumulado</p>
-                    <div id="final-score" class="text-3xl sm:text-5xl md:text-6xl font-mono font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300 break-words">R$ 0,00</div>
-                </div>
-
-                <!-- Classification Badge -->
-                <div id="classification-badge" class="inline-block px-4 sm:px-6 py-2 sm:py-3 rounded-xl border-2 mb-6 sm:mb-8">
-                    <span id="classification-text" class="text-base sm:text-xl font-bold"></span>
-                </div>
-
-                <!-- Graphical Analysis -->
-                <div class="bg-slate-800/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/5 mb-6 sm:mb-8 mx-auto text-left">
-                    <h3 class="text-base sm:text-lg font-bold text-white mb-4 sm:mb-6 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-emerald-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                        Análise Gráfica de Desempenho
+            <!-- Configuration Form -->
+            <div id="configSection" class="hidden max-w-2xl mx-auto slide-up">
+                <div class="glass-dark rounded-2xl p-8">
+                    <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Configuração do App Android
                     </h3>
-                    
-                    <div class="w-full overflow-x-auto">
-                        <canvas id="performance-chart" class="w-full min-w-[300px] mb-4 sm:mb-6" height="200"></canvas>
-                    </div>
-                    
-                    <div class="grid grid-cols-3 gap-2 sm:gap-4 text-center">
-                        <div class="bg-emerald-500/10 rounded-lg p-2 sm:p-3 border border-emerald-500/20">
-                            <div class="text-xl sm:text-2xl font-bold text-emerald-400" id="stat-good">0</div>
-                            <div class="text-[10px] sm:text-xs text-emerald-300/70 mt-1">Acertos</div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Nome do App</label>
+                            <input type="text" id="appName" value="Meu App AI" class="w-full bg-black/30 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors">
                         </div>
-                        <div class="bg-blue-500/10 rounded-lg p-2 sm:p-3 border border-blue-500/20">
-                            <div class="text-xl sm:text-2xl font-bold text-blue-400" id="stat-neutral">0</div>
-                            <div class="text-[10px] sm:text-xs text-blue-300/70 mt-1">Neutras</div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Package ID</label>
+                            <input type="text" id="appId" value="com.example.myaiapp" class="w-full bg-black/30 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors text-sm font-mono">
                         </div>
-                        <div class="bg-red-500/10 rounded-lg p-2 sm:p-3 border border-red-500/20">
-                            <div class="text-xl sm:text-2xl font-bold text-red-400" id="stat-bad">0</div>
-                            <div class="text-[10px] sm:text-xs text-red-300/70 mt-1">Erros</div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Versão</label>
+                            <input type="text" id="appVersion" value="1.0.0" class="w-full bg-black/30 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Min SDK (Android)</label>
+                            <select id="minSdk" class="w-full bg-black/30 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors">
+                                <option value="22">Android 5.1 (API 22)</option>
+                                <option value="24">Android 7.0 (API 24)</option>
+                                <option value="26" selected>Android 8.0 (API 26)</option>
+                                <option value="28">Android 9.0 (API 28)</option>
+                                <option value="31">Android 12 (API 31)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Orientação</label>
+                            <select id="orientation" class="w-full bg-black/30 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors">
+                                <option value="default">Padrão</option>
+                                <option value="portrait">Somente Retrato</option>
+                                <option value="landscape">Somente Paisagem</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Descrição</label>
+                            <input type="text" id="appDesc" value="App criado com Google AI Studio" class="w-full bg-black/30 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-300 mb-1">Autor</label>
+                            <input type="text" id="appAuthor" value="Developer" class="w-full bg-black/30 border border-gray-700 rounded-xl px-4 py-3 text-white focus:border-purple-500 focus:outline-none transition-colors">
                         </div>
                     </div>
 
-                    <div class="mt-4 sm:mt-6 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs sm:text-sm text-slate-400 truncate mr-2">Potencial Máx. Ganho</span>
-                            <span id="max-gain" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 flex-shrink-0"></span>
+                    <!-- Icon Upload -->
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Ícone do App (PNG, 1024x1024 recomendado)</label>
+                        <label for="iconInput" id="iconDropZone" class="border-2 border-dashed border-gray-700 rounded-xl p-4 text-center cursor-pointer hover:border-purple-500/50 transition-colors block">
+                            <input type="file" id="iconInput" accept="image/png,image/jpeg,image/svg+xml" style="position:absolute;width:0;height:0;opacity:0;pointer-events:none;">
+                            <div id="iconPreview" class="hidden mb-2">
+                                <img id="iconImg" class="w-20 h-20 rounded-xl mx-auto object-cover border border-gray-600">
+                                <p class="text-xs text-green-400 mt-1">Ícone selecionado</p>
+                            </div>
+                            <div id="iconPlaceholder">
+                                <svg class="w-8 h-8 text-gray-600 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                <p class="text-xs text-gray-500">Clique para enviar ícone</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Plugins -->
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Plugins Cordova Incluídos</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <label class="flex items-center gap-3 p-3 bg-black/20 rounded-xl cursor-pointer hover:bg-black/30 transition-colors">
+                                <input type="checkbox" checked class="plugin-check w-4 h-4 rounded bg-black/30 border-gray-600 text-purple-500 focus:ring-purple-500" value="cordova-plugin-device">
+                                <div>
+                                    <span class="text-sm font-medium">Device</span>
+                                    <p class="text-xs text-gray-500">Info do dispositivo</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 bg-black/20 rounded-xl cursor-pointer hover:bg-black/30 transition-colors">
+                                <input type="checkbox" checked class="plugin-check w-4 h-4 rounded bg-black/30 border-gray-600 text-purple-500 focus:ring-purple-500" value="cordova-plugin-network-information">
+                                <div>
+                                    <span class="text-sm font-medium">Network Info</span>
+                                    <p class="text-xs text-gray-500">Status de conexão</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 bg-black/20 rounded-xl cursor-pointer hover:bg-black/30 transition-colors">
+                                <input type="checkbox" checked class="plugin-check w-4 h-4 rounded bg-black/30 border-gray-600 text-purple-500 focus:ring-purple-500" value="cordova-plugin-splashscreen">
+                                <div>
+                                    <span class="text-sm font-medium">Splash Screen</span>
+                                    <p class="text-xs text-gray-500">Tela de carregamento</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 bg-black/20 rounded-xl cursor-pointer hover:bg-black/30 transition-colors">
+                                <input type="checkbox" checked class="plugin-check w-4 h-4 rounded bg-black/30 border-gray-600 text-purple-500 focus:ring-purple-500" value="cordova-plugin-statusbar">
+                                <div>
+                                    <span class="text-sm font-medium">Status Bar</span>
+                                    <p class="text-xs text-gray-500">Controle da barra de status</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 bg-black/20 rounded-xl cursor-pointer hover:bg-black/30 transition-colors">
+                                <input type="checkbox" checked class="plugin-check w-4 h-4 rounded bg-black/30 border-gray-600 text-purple-500 focus:ring-purple-500" value="cordova-plugin-inappbrowser">
+                                <div>
+                                    <span class="text-sm font-medium">InAppBrowser</span>
+                                    <p class="text-xs text-gray-500">Navegador embutido</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 bg-black/20 rounded-xl cursor-pointer hover:bg-black/30 transition-colors">
+                                <input type="checkbox" class="plugin-check w-4 h-4 rounded bg-black/30 border-gray-600 text-purple-500 focus:ring-purple-500" value="cordova-plugin-camera">
+                                <div>
+                                    <span class="text-sm font-medium">Camera</span>
+                                    <p class="text-xs text-gray-500">Acesso à câmera</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 bg-black/20 rounded-xl cursor-pointer hover:bg-black/30 transition-colors">
+                                <input type="checkbox" class="plugin-check w-4 h-4 rounded bg-black/30 border-gray-600 text-purple-500 focus:ring-purple-500" value="cordova-plugin-geolocation">
+                                <div>
+                                    <span class="text-sm font-medium">Geolocation</span>
+                                    <p class="text-xs text-gray-500">Localização GPS</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 bg-black/20 rounded-xl cursor-pointer hover:bg-black/30 transition-colors">
+                                <input type="checkbox" class="plugin-check w-4 h-4 rounded bg-black/30 border-gray-600 text-purple-500 focus:ring-purple-500" value="cordova-plugin-file">
+                                <div>
+                                    <span class="text-sm font-medium">File</span>
+                                    <p class="text-xs text-gray-500">Acesso ao sistema de arquivos</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 bg-black/20 rounded-xl cursor-pointer hover:bg-black/30 transition-colors">
+                                <input type="checkbox" class="plugin-check w-4 h-4 rounded bg-black/30 border-gray-600 text-purple-500 focus:ring-purple-500" value="cordova-plugin-clipboard">
+                                <div>
+                                    <span class="text-sm font-medium">Clipboard</span>
+                                    <p class="text-xs text-gray-500">Copiar e colar</p>
+                                </div>
+                            </label>
+                            <label class="flex items-center gap-3 p-3 bg-black/20 rounded-xl cursor-pointer hover:bg-black/30 transition-colors">
+                                <input type="checkbox" class="plugin-check w-4 h-4 rounded bg-black/30 border-gray-600 text-purple-500 focus:ring-purple-500" value="cordova-plugin-vibration">
+                                <div>
+                                    <span class="text-sm font-medium">Vibration</span>
+                                    <p class="text-xs text-gray-500">Vibração do dispositivo</p>
+                                </div>
+                            </label>
                         </div>
-                        <div class="w-full bg-slate-700 rounded-full h-2">
-                            <div id="max-gain-bar" class="bg-emerald-500 h-2 rounded-full bar-animate" style="width: 0%"></div>
-                        </div>
-                        
-                        <div class="flex items-center justify-between mt-2">
-                            <span class="text-xs sm:text-sm text-slate-400 truncate mr-2">Seu Ganho Realizado</span>
-                            <span id="real-gain" class="text-xs sm:text-sm font-mono font-bold text-emerald-400 flex-shrink-0"></span>
-                        </div>
-                        <div class="w-full bg-slate-700 rounded-full h-2">
-                            <div id="real-gain-bar" class="bg-emerald-400 h-2 rounded-full bar-animate" style="width: 0%"></div>
-                        </div>
-                        
-                        <div class="flex items-center justify-between mt-2">
-                            <span class="text-xs sm:text-sm text-slate-400 truncate mr-2">Perda Evitada</span>
-                            <span id="loss-avoided" class="text-xs sm:text-sm font-mono font-bold text-blue-400 flex-shrink-0"></span>
-                        </div>
-                        <div class="w-full bg-slate-700 rounded-full h-2">
-                            <div id="loss-avoided-bar" class="bg-blue-500 h-2 rounded-full bar-animate" style="width: 0%"></div>
-                        </div>
+                    </div>
+
+                    <!-- Content Security Policy -->
+                    <div class="mt-6">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="addCSP" checked class="w-4 h-4 rounded bg-black/30 border-gray-600 text-purple-500 focus:ring-purple-500">
+                            <span class="text-sm font-medium text-gray-300">Adicionar Content Security Policy (recomendado para AI Studio)</span>
+                        </label>
+                    </div>
+
+                    <!-- Back Button -->
+                    <div class="mt-8 flex gap-3">
+                        <button id="backBtn" class="px-6 py-3 bg-gray-800 rounded-xl font-semibold hover:bg-gray-700 transition-colors">
+                            ← Voltar
+                        </button>
+                        <button id="generateBtn" class="flex-1 py-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl font-semibold hover:from-purple-500 hover:to-blue-500 transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                            Gerar Projeto Cordova
+                        </button>
                     </div>
                 </div>
-
-                <button onclick="location.reload()" class="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:-translate-y-1 active:scale-95">
-                    Nova Simulação
-                </button>
             </div>
-        </div>
-    </main>
+
+            <!-- Processing -->
+            <div id="processingSection" class="hidden max-w-2xl mx-auto text-center py-12">
+                <div class="inline-block relative mb-6">
+                    <div class="w-20 h-20 border-4 border-purple-500/20 rounded-full"></div>
+                    <div class="absolute inset-0 w-20 h-20 border-4 border-transparent border-t-purple-500 rounded-full animate-spin"></div>
+                    <div class="absolute inset-3 w-14 h-14 border-4 border-transparent border-t-blue-500 rounded-full animate-spin" style="animation-direction: reverse; animation-duration: 0.8s;"></div>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Gerando projeto Cordova...</h3>
+                <p id="processingStatus" class="text-gray-400 text-sm">Extraindo arquivos do ZIP...</p>
+                <div class="mt-6 max-w-md mx-auto">
+                    <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                        <div id="progressBar" class="progress-bar h-full bg-gradient-to-r from-purple-500 to-blue-500 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <p id="progressPercent" class="text-xs text-gray-500 mt-1">0%</p>
+                </div>
+            </div>
+
+            <!-- Result -->
+            <div id="resultSection" class="hidden max-w-2xl mx-auto slide-up">
+                <div class="glass-dark rounded-2xl p-8 text-center">
+                    <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-2">Projeto Gerado com Sucesso! 🎉</h3>
+                    <p class="text-gray-400 mb-6">Seu projeto Cordova está pronto. Baixe o ZIP e siga as instruções abaixo para compilar o APK.</p>
+
+                    <div id="resultStats" class="grid grid-cols-3 gap-4 mb-6">
+                        <div class="bg-black/20 rounded-xl p-4">
+                            <p id="statFiles" class="text-2xl font-bold text-purple-400">0</p>
+                            <p class="text-xs text-gray-500">Arquivos</p>
+                        </div>
+                        <div class="bg-black/20 rounded-xl p-4">
+                            <p id="statSize" class="text-2xl font-bold text-blue-400">0 KB</p>
+                            <p class="text-xs text-gray-500">Tamanho</p>
+                        </div>
+                        <div class="bg-black/20 rounded-xl p-4">
+                            <p id="statPlugins" class="text-2xl font-bold text-green-400">0</p>
+                            <p class="text-xs text-gray-500">Plugins</p>
+                        </div>
+                    </div>
+
+                    <button id="downloadBtn" class="w-full py-4 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl font-bold text-lg hover:from-green-500 hover:to-emerald-500 transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                        Baixar Projeto Cordova (.zip)
+                    </button>
+
+                    <!-- Build Instructions -->
+                    <div class="mt-8 text-left">
+                        <h4 class="font-semibold text-lg mb-4 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            Como compilar o APK
+                        </h4>
+                        <div class="space-y-4">
+                            <div class="bg-black/20 rounded-xl p-4">
+                                <p class="text-sm font-medium text-purple-400 mb-2">1. Pré-requisitos</p>
+                                <div class="bg-black/30 rounded-lg p-3 text-xs font-mono text-gray-300 space-y-1">
+                                    <p>• Node.js 18+ <a href="https://nodejs.org" class="text-blue-400 underline">nodejs.org</a></p>
+                                    <p>• Android Studio <a href="https://developer.android.com/studio" class="text-blue-400 underline">developer.android.com</a></p>
+                                    <p>• JDK 11+ <a href="https://adoptium.net" class="text-blue-400 underline">adoptium.net</a></p>
+                                </div>
+                            </div>
+                            <div class="bg-black/20 rounded-xl p-4">
+                                <p class="text-sm font-medium text-purple-400 mb-2">2. Instalar Cordova</p>
+                                <div class="bg-black/30 rounded-lg p-3 text-xs font-mono text-gray-300">
+                                    <p><span class="text-green-400">$</span> npm install -g cordova</p>
+                                </div>
+                            </div>
+                            <div class="bg-black/20 rounded-xl p-4">
+                                <p class="text-sm font-medium text-purple-400 mb-2">3. Extrair e navegar</p>
+                                <div class="bg-black/30 rounded-lg p-3 text-xs font-mono text-gray-300">
+                                    <p><span class="text-green-400">$</span> unzip cordova-project.zip</p>
+                                    <p><span class="text-green-400">$</span> cd cordova-project</p>
+                                </div>
+                            </div>
+                            <div class="bg-black/20 rounded-xl p-4">
+                                <p class="text-sm font-medium text-purple-400 mb-2">4. Adicionar plataforma Android</p>
+                                <div class="bg-black/30 rounded-lg p-3 text-xs font-mono text-gray-300">
+                                    <p><span class="text-green-400">$</span> cordova platform add android@latest</p>
+                                </div>
+                            </div>
+                            <div class="bg-black/20 rounded-xl p-4">
+                                <p class="text-sm font-medium text-purple-400 mb-2">5. Instalar plugins</p>
+                                <div class="bg-black/30 rounded-lg p-3 text-xs font-mono text-gray-300">
+                                    <p><span class="text-green-400">$</span> npm install</p>
+                                </div>
+                            </div>
+                            <div class="bg-black/20 rounded-xl p-4">
+                                <p class="text-sm font-medium text-purple-400 mb-2">6. Compilar APK</p>
+                                <div class="bg-black/30 rounded-lg p-3 text-xs font-mono text-gray-300">
+                                    <p><span class="text-green-400">$</span> cordova build android</p>
+                                </div>
+                            </div>
+                            <div class="bg-black/20 rounded-xl p-4">
+                                <p class="text-sm font-medium text-yellow-400 mb-2">7. APK gerado em:</p>
+                                <div class="bg-black/30 rounded-lg p-3 text-xs font-mono text-gray-300">
+                                    <p>platforms/android/app/build/outputs/apk/debug/app-debug.apk</p>
+                                </div>
+                            </div>
+                            <div class="bg-black/20 rounded-xl p-4">
+                                <p class="text-sm font-medium text-cyan-400 mb-2">Para APK assinado (produção):</p>
+                                <div class="bg-black/30 rounded-lg p-3 text-xs font-mono text-gray-300 space-y-1">
+                                    <p><span class="text-green-400">$</span> cordova build android --release</p>
+                                    <p class="text-gray-500 mt-2"># Depois assine com jarsigner ou apksigner</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded-xl">
+                            <p class="text-sm text-blue-300">💡 <strong>Dica:</strong> Para testar rapidamente, você também pode usar <code class="bg-black/30 px-2 py-0.5 rounded">cordova run android</code> com um dispositivo USB conectado ou emulador.</p>
+                        </div>
+                    </div>
+
+                    <button id="newConversionBtn" class="mt-6 px-6 py-3 bg-gray-800 rounded-xl font-semibold hover:bg-gray-700 transition-colors">
+                        ← Nova Conversão
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-white/5 py-6">
+            <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-600">
+                <p>CordovaPack — Conversor AI Studio → Android Cordova • 100% Client-Side • Gratuito</p>
+            </div>
+        </footer>
+    </div>
 
     <script>
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let soundEnabled = true;
+    (function() {
+        'use strict';
 
-        function playSound(type) {
-            if (!soundEnabled) return;
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            const now = audioCtx.currentTime;
-            if (type === 'success') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(523.25, now);
-                osc.frequency.exponentialRampToValueAtTime(659.25, now + 0.1);
-                osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.2);
-                gainNode.gain.setValueAtTime(0.1, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
-                osc.start(now); osc.stop(now + 0.6);
-            } else if (type === 'error') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, now);
-                osc.frequency.linearRampToValueAtTime(100, now + 0.3);
-                gainNode.gain.setValueAtTime(0.1, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
-                osc.start(now); osc.stop(now + 0.4);
-            } else if (type === 'click') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(800, now);
-                gainNode.gain.setValueAtTime(0.05, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-                osc.start(now); osc.stop(now + 0.05);
-            } else if (type === 'win') {
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(523.25, now);
-                osc.frequency.setValueAtTime(523.25, now + 0.1);
-                osc.frequency.setValueAtTime(523.25, now + 0.2);
-                osc.frequency.setValueAtTime(659.25, now + 0.4);
-                gainNode.gain.setValueAtTime(0.05, now);
-                gainNode.gain.linearRampToValueAtTime(0, now + 1.5);
-                osc.start(now); osc.stop(now + 1.5);
+        // State
+        let uploadedZip = null;
+        let uploadedFile = null;
+        let iconDataUrl = null;
+        let generatedZipBlob = null;
+
+        // DOM Elements
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const fileList = document.getElementById('fileList');
+        const removeFile = document.getElementById('removeFile');
+        const proceedBtn = document.getElementById('proceedBtn');
+        const uploadSection = document.getElementById('uploadSection');
+        const configSection = document.getElementById('configSection');
+        const processingSection = document.getElementById('processingSection');
+        const resultSection = document.getElementById('resultSection');
+        const backBtn = document.getElementById('backBtn');
+        const generateBtn = document.getElementById('generateBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const newConversionBtn = document.getElementById('newConversionBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressPercent = document.getElementById('progressPercent');
+        const processingStatus = document.getElementById('processingStatus');
+        const iconDropZone = document.getElementById('iconDropZone');
+        const iconInput = document.getElementById('iconInput');
+        const iconPreview = document.getElementById('iconPreview');
+        const iconPlaceholder = document.getElementById('iconPlaceholder');
+        const iconImg = document.getElementById('iconImg');
+
+        // Update step indicators
+        function updateSteps(activeStep) {
+            for (let i = 1; i <= 3; i++) {
+                const step = document.getElementById('step' + i);
+                if (i < activeStep) {
+                    step.className = step.className.replace(/border-\w+-500/g, 'border-green-500').replace(/step-active/g, '').replace(/step-done/g, 'step-done');
+                    step.querySelector('.w-8').classList.remove('bg-purple-500/20', 'text-purple-400', 'bg-gray-700/20', 'text-gray-500');
+                    step.querySelector('.w-8').classList.add('bg-green-500/20', 'text-green-400');
+                    step.querySelector('.w-8').textContent = '✓';
+                    step.querySelector('h3').classList.remove('text-purple-400', 'text-gray-500');
+                    step.querySelector('h3').classList.add('text-green-400');
+                } else if (i === activeStep) {
+                    step.className = step.className.replace(/border-\w+-500/g, 'border-purple-500').replace(/step-done/g, '').replace(/step-active/g, 'step-active');
+                    step.querySelector('.w-8').classList.remove('bg-green-500/20', 'text-green-400', 'bg-gray-700/20', 'text-gray-500');
+                    step.querySelector('.w-8').classList.add('bg-purple-500/20', 'text-purple-400');
+                    step.querySelector('.w-8').textContent = i;
+                    step.querySelector('h3').classList.remove('text-green-400', 'text-gray-500');
+                    step.querySelector('h3').classList.add('text-purple-400');
+                } else {
+                    step.className = step.className.replace(/border-\w+-500/g, 'border-gray-700').replace(/step-active/g, '').replace(/step-done/g, '');
+                    step.querySelector('.w-8').classList.remove('bg-green-500/20', 'text-green-400', 'bg-purple-500/20', 'text-purple-400');
+                    step.querySelector('.w-8').classList.add('bg-gray-700/20', 'text-gray-500');
+                    step.querySelector('.w-8').textContent = i;
+                    step.querySelector('h3').classList.remove('text-green-400', 'text-purple-400');
+                    step.querySelector('h3').classList.add('text-gray-500');
+                }
             }
         }
 
-        function toggleSound() {
-            soundEnabled = !soundEnabled;
-            document.getElementById('icon-sound-on').classList.toggle('hidden');
-            document.getElementById('icon-sound-off').classList.toggle('hidden');
-        }
+        // File drop handling
+        dropZone.addEventListener('click', (e) => {
+            e.preventDefault();
+            fileInput.click();
+        });
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => { if (e.target.files.length) handleFile(e.target.files[0]); });
 
-        const gameState = {
-            currentPhase: 0,
-            balance: 1000,
-            totalPhases: 24,
-            choices: []
-        };
-
-        const levels = [
-            {
-                name: "Nível 1: Investidor Iniciante",
-                color: "emerald",
-                scenarios: [
-                    {
-                        title: "A Base de Tudo",
-                        desc: "Você tem R$ 1.000,00. Antes de buscar altos retornos, qual é o passo fundamental de segurança?",
-                        options: [
-                            { text: "Comprar ações de tecnologia", impact: -150, type: "bad", feedback: "Arriscado demais para seu primeiro passo. Ações são voláteis e você pode precisar desse dinheiro para emergências, sendo obrigado a vender com prejuízo." },
-                            { text: "Reserva de Emergência (Tesouro Selic/CDB Liquidez Diária)", impact: 50, type: "good", feedback: "Perfeito! Segurança e liquidez são prioritários no início. Esse dinheiro deve estar sempre acessível." },
-                            { text: "Deixar na Conta Corrente", impact: 0, type: "neutral", feedback: "Seguro contra perdas nominais, mas a inflação está corroendo seu poder de compra silenciosamente. Dinheiro parado perde valor." }
-                        ]
-                    },
-                    {
-                        title: "O Vilão Inflacionário",
-                        desc: "Sua reserva está feita. A inflação subiu para 10% ao ano. Onde seu dinheiro deve estar para não perder valor real?",
-                        options: [
-                            { text: "Poupança (Rende ~6% a.a.)", impact: -40, type: "bad", feedback: "Matematicamente prejudicial. Se a inflação é 10% e a poupança rende 6%, você perdeu 4% de poder de compra real." },
-                            { text: "IPCA+ (Tesouro Direto)", impact: 100, type: "good", feedback: "Excelente! Títulos atrelados à inflação (IPCA) garantem que seu dinheiro renderá acima dos preços dos produtos." },
-                            { text: "Guardar em Espécie (Colchão)", impact: -100, type: "bad", feedback: "Pior opção possível. O papel moeda não gera juros e desvaloriza integralmente pela inflação, além do risco de roubo." }
-                        ]
-                    },
-                    {
-                        title: "Primeiros Riscos",
-                        desc: "Com a base sólida, você quer começar a arriscar um pouco (Renda Variável). Qual a melhor porta de entrada?",
-                        options: [
-                            { text: "Day Trade em Opções", impact: -500, type: "bad", feedback: "Altíssimo risco e complexidade. Estatisticamente, mais de 90% dos iniciantes perdem dinheiro tentando operar curto prazo sem experiência." },
-                            { text: "Fundos Imobiliários (FIIs)", impact: 120, type: "good", feedback: "Ótima escolha! FIIs pagam dividendos mensais isentos de IR e têm volatilidade menor que ações, sendo ótimos para iniciantes." },
-                            { text: "Ações Penny Stock (Empresas desconhecidas)", impact: -200, type: "bad", feedback: "Armadilha comum. Empresas muito baratas geralmente estão assim por problemas graves. É especulação, não investimento." }
-                        ]
-                    },
-                    {
-                        title: "Tamanho da Reserva",
-                        desc: "Quanto dinheiro você deve manter na sua Reserva de Emergência para estar verdadeiramente protegido?",
-                        options: [
-                            { text: "O equivalente a 1 mês de gastos", impact: -80, type: "bad", feedback: "Insuficiente. Se você ficar desempregado, 1 mês pode não ser tempo suficiente para se recolocar no mercado." },
-                            { text: "O equivalente a 6 a 12 meses de gastos", impact: 100, type: "good", feedback: "Correto! Especialistas recomendam de 6 a 12 meses de despesas essenciais para cobrir imprevistos com tranquilidade." },
-                            { text: "Apenas o que sobra no final do mês", impact: -50, type: "bad", feedback: "Perigoso. Se não houver sobra, você não terá reserva. A reserva deve ser uma prioridade, não um residual." }
-                        ]
-                    },
-                    {
-                        title: "Cartão de Crédito",
-                        desc: "Você tem uma dívida no cartão de crédito com juros de 400% ao ano. O que fazer primeiro?",
-                        options: [
-                            { text: "Pagar o mínimo e continuar gastando", impact: -300, type: "bad", feedback: "Desastroso. Juros de cartão são os mais altos do mercado. Pagar o mínimo faz a dívida crescer exponencialmente." },
-                            { text: "Quitar a dívida imediatamente usando a reserva", impact: 150, type: "good", feedback: "Inteligente! Eliminar dívidas com juros altos é o melhor 'investimento' que você pode fazer. Ganho garantido de 400% a.a." },
-                            { text: "Parcelar a dívida em 12x no cartão", impact: -50, type: "neutral", feedback: "Melhor que o mínimo, mas ainda paga juros. O ideal é quitar à vista ou renegociar com taxa menor." }
-                        ]
-                    },
-                    {
-                        title: "Primeiro Aporte Regular",
-                        desc: "Você decidiu investir R$ 300,00 por mês. Qual é a estratégia mais poderosa para um iniciante?",
-                        options: [
-                            { text: "Investir tudo de uma vez quando juntar R$ 3.600", impact: -60, type: "bad", feedback: "Prejudicial. Deixar o dinheiro parado meses esperando acumular significa perder rendimentos todos os meses." },
-                            { text: "Investir R$ 300 todo mês sem falta (DCA)", impact: 130, type: "good", feedback: "Perfeito! Dollar Cost Averaging (aporte regular) é a estratégia mais comprovada. A consistência vence o timing de mercado." },
-                            { text: "Investir apenas quando o mercado cair", impact: -30, type: "neutral", feedback: "Difícil de executar. Tentar acertar o fundo do mercado geralmente resulta em ficar fora por muito tempo." }
-                        ]
-                    }
-                ]
-            },
-            {
-                name: "Nível 2: Investidor Intermediário",
-                color: "blue",
-                scenarios: [
-                    {
-                        title: "Análise Fundamentalista",
-                        desc: "Você analisa uma empresa. Ela lucra consistentemente, tem baixa dívida e paga bons dividendos. O P/L está historicamente baixo.",
-                        options: [
-                            { text: "Comprar e manter (Value Investing)", impact: 250, type: "good", feedback: "Warren Buffett aprova! Comprar boas empresas quando estão em 'promoção' é a essência do sucesso na bolsa." },
-                            { text: "Vender pois está 'barata demais'", impact: -50, type: "bad", feedback: "Erro de lógica. No longo prazo, o preço tende a refletir o valor real. Vender uma boa empresa apenas porque caiu é perder oportunidades." },
-                            { text: "Ignorar e comprar a ação que mais subiu hoje", impact: -100, type: "bad", feedback: "Isso é seguir manada. Comprar na alta histórica aumenta drasticamente seu risco de pagar caro demais." }
-                        ]
-                    },
-                    {
-                        title: "Rebalanceamento de Carteira",
-                        desc: "Suas ações subiram muito e agora representam 80% da sua carteira. Sua estratégia original era 50%. O que fazer?",
-                        options: [
-                            { text: "Vender o excedente e comprar Renda Fixa", impact: 150, type: "good", feedback: "Disciplina profissional! Realizar lucros na alta e mover para investimentos conservadores mantém seu risco controlado." },
-                            { text: "Comprar mais ações alavancado", impact: -300, type: "bad", feedback: "Ganância! Você aumentou demais a exposição ao risco. Se o mercado corrigir, seus prejuízos serão devastadores." },
-                            { text: "Não fazer nada", impact: 50, type: "neutral", feedback: "Sua carteira ficou desbalanceada. Embora tenha lucrado, você está correndo mais riscos do que planejou." }
-                        ]
-                    },
-                    {
-                        title: "Crise no Exterior",
-                        desc: "O mercado americano caiu 20%. Como sua carteira global (investimentos no exterior) reagiu?",
-                        options: [
-                            { text: "Pânico e venda total", impact: -200, type: "bad", feedback: "O erro clássico. Quem vende na crise, concretiza o prejuízo. Investimentos internacionais são para longo prazo." },
-                            { text: "Aportar mais recursos (Buy the Dip)", impact: 300, type: "good", feedback: "Visão de longo prazo! Crises são oportunidades de comprar ativos de qualidade com desconto." },
-                            { text: "Converter tudo para Dólar físico", impact: 0, type: "neutral", feedback: "Segurança extrema, mas você perdeu a chance de recomprar ativos baratos e esperar a recuperação." }
-                        ]
-                    },
-                    {
-                        title: "LCA e LCI: Isenção Fiscal",
-                        desc: "Você encontra um CDB rendendo 110% CDI e uma LCI rendendo 95% CDI. Ambos do mesmo banco e prazo. Qual escolher?",
-                        options: [
-                            { text: "CDB 110% CDI (maior rentabilidade bruta)", impact: -80, type: "bad", feedback: "Erro comum! O CDB tem Imposto de Renda regressivo (22,5% a 15%). A LCI é isenta de IR. 95% isento > 110% tributado." },
-                            { text: "LCI 95% CDI (isenta de IR)", impact: 120, type: "good", feedback: "Correto! A isenção de IR torna a LCI mais vantajosa. Para investidores na faixa de 27,5% de IR, 95% isento equivale a ~130% CDI bruto." },
-                            { text: "Dividir igualmente entre os dois", impact: 40, type: "neutral", feedback: "Razoável, mas você poderia maximizar o retorno colocando tudo na LCI isenta." }
-                        ]
-                    },
-                    {
-                        title: "Dividendos: Reinvestir ou Gastar?",
-                        desc: "Seus FIIs e ações pagaram R$ 500 em dividendos este mês. Qual a melhor decisão para construir patrimônio?",
-                        options: [
-                            { text: "Reinvestir automaticamente em novas cotas/ações", impact: 200, type: "good", feedback: "Brilhante! O efeito bola de neve dos dividendos reinvestidos é o motor dos juros compostos na renda variável." },
-                            { text: "Gastar como renda extra", impact: -50, type: "bad", feedback: "Curto-prazismo. Gastar dividendos impede o crescimento exponencial do patrimônio. O luxo vem depois da independência." },
-                            { text: "Guardar na poupança", impact: -30, type: "neutral", feedback: "Melhor que gastar, mas a poupança rende pouco. Reinvestir na bolsa geraria muito mais retorno." }
-                        ]
-                    },
-                    {
-                        title: "Diversificação Geográfica",
-                        desc: "100% do seu patrimônio está investido no Brasil. Um consultor sugere investir no exterior. Qual sua atitude?",
-                        options: [
-                            { text: "Recusar, confio apenas no mercado brasileiro", impact: -100, type: "bad", feedback: "Risco concentrado. Se o Brasil entrar em crise, seu patrimônio inteiro será afetado. Diversificação geográfica é proteção." },
-                            { text: "Alocar 20-30% em ETFs internacionais (IVVB11, BOVA11 global)", impact: 180, type: "good", feedback: "Excelente! ETFs internacionais dão exposição a empresas globais, moeda forte e reduzem o risco país da sua carteira." },
-                            { text: "Mover 80% para o exterior", impact: -50, type: "neutral", feedback: "Exagerado. Manter parte no Brasil também é importante para hedge cambial e oportunidades locais." }
-                        ]
-                    }
-                ]
-            },
-            {
-                name: "Nível 3: Investidor Avançado",
-                color: "purple",
-                scenarios: [
-                    {
-                        title: "Curva de Juros",
-                        desc: "O Banco Central sinaliza que vai parar de subir os juros. O que acontece com os títulos Prefixados que você comprou quando os juros estavam altos?",
-                        options: [
-                            { text: "Marcar na curva (Vender antes do vencimento)", impact: 200, type: "good", feedback: "Brilhante! Quando os juros futuros caem, o preço unitário dos títulos prefixados sobe, gerando ganho de capital antecipado." },
-                            { text: "Levar até o vencimento", impact: 100, type: "neutral", feedback: "Seguro e garantido, mas você deixou de ganhar a 'plusvalia' que poderia ter obtido vendendo na queda dos juros." },
-                            { text: "Vender imediatamente com prejuízo", impact: -100, type: "bad", feedback: "Erro grave. Prefixados tendem a valorizar quando os juros caem. Não há motivo para vender perdendo." }
-                        ]
-                    },
-                    {
-                        title: "Alavocagem Saudável",
-                        desc: "Uma oportunidade imobiliária exige empréstimo a 10% a.a. O imóvel gera aluguel líquido de 12% a.a. + valorização.",
-                        options: [
-                            { text: "Alavancar (Tomar empréstimo)", impact: 300, type: "good", feedback: "Spread financeiro positivo! Usar OPM (Other People's Money) para ganhar mais do que o custo da dívida é o segredo dos ricos." },
-                            { text: "Recusar a oportunidade", impact: 0, type: "neutral", feedback: "Conservador. Você evita dívidas, mas perde a alavancagem que multiplicaria seu patrimônio." },
-                            { text: "Usar todo o caixa pessoal", impact: 100, type: "bad", feedback: "Perdeu a liquidez. Às vezes é melhor manter seu caixa seguro e usar crédito barato se o retorno do ativo for maior." }
-                        ]
-                    },
-                    {
-                        title: "Derivativos: Proteção",
-                        desc: "Você tem muitas ações PETR4 e teme uma queda temporária no petróleo. Como se proteger sem vender as ações?",
-                        options: [
-                            { text: "Compra de Put (Opções)", impact: 150, type: "good", feedback: "Hedge perfeito! A Put funciona como um seguro. Se a ação cair, a Put valoriza e compensa o prejuízo da carteira." },
-                            { text: "Venda Coberta de Call", impact: 50, type: "neutral", feedback: "Gera renda (prêmio), mas limita seu ganho se o mercado subir e não protege totalmente contra quedas bruscas." },
-                            { text: "Não fazer nada", impact: -200, type: "bad", feedback: "Exposição total ao risco. Um investidor avançado deve saber se proteger (Hedge) em momentos de incerteza." }
-                        ]
-                    },
-                    {
-                        title: "Come-Cotas em Fundos",
-                        desc: "Você investe em um fundo de ações que cobra 2% de administração e tem 'come-cotas' semestral. Qual o impacto real?",
-                        options: [
-                            { text: "Ignorar, taxas pequenas não importam", impact: -120, type: "bad", feedback: "Grave erro! 2% ao ano parece pouco, mas em 20 anos pode consumir até 40% do seu rendimento composto. Taxas importam muito." },
-                            { text: "Migrar para ETFs com taxa de 0,2% a.a.", impact: 180, type: "good", feedback: "Correto! ETFs replicam índices com taxas muito menores. A diferença de 1,8% a.a. faz uma diferença colossal no longo prazo." },
-                            { text: "Negociar taxa menor com o gerente", impact: 60, type: "neutral", feedback: "Boa tentativa, mas a redução geralmente é pequena. Mudar para ETFs ou fundos indexados é mais eficaz." }
-                        ]
-                    },
-                    {
-                        title: "Dividend Yield vs Valorização",
-                        desc: "Empresa A paga 8% de dividendos mas não cresce. Empresa B paga 1% mas cresce 15% ao ano. Qual estratégia adotar?",
-                        options: [
-                            { text: "Empresa A (foco em renda imediata)", impact: -60, type: "bad", feedback: "Renda alta sem crescimento é armadilha. O dividend yield pode cair se o preço da ação despencar (yield trap)." },
-                            { text: "Empresa B (foco em crescimento + reinvestir dividendos)", impact: 200, type: "good", feedback: "Visão de longo prazo! Crescimento de lucro + dividendos reinvestidos criam muito mais valor total (Total Return) que só dividendos." },
-                            { text: "Misto 50/50", impact: 80, type: "neutral", feedback: "Razoável, mas em fase de acumulação, o crescimento tende a ser mais importante que a renda imediata." }
-                        ]
-                    },
-                    {
-                        title: "Swaps e Proteção Cambial",
-                        desc: "Você tem R$ 500.000 em ações e quer proteger contra uma queda de 15% sem vender os ativos. Qual instrumento usar?",
-                        options: [
-                            { text: "Swap de proteção (comprar put sintética)", impact: 150, type: "good", feedback: "Profissional! Swaps permitem proteger a carteira contra quedas específicas mantendo a exposição à alta. Custo-benefício eficiente." },
-                            { text: "Vender 50% e ficar em caixa", impact: -40, type: "neutral", feedback: "Funciona como proteção, mas você perde dividendos e pode perder o trem da alta se o mercado subir." },
-                            { text: "Comprar ouro físico", impact: -80, type: "bad", feedback: "Ouro não correlaciona diretamente com ações brasileiras. É uma proteção genérica, não um hedge eficiente para sua carteira." }
-                        ]
-                    }
-                ]
-            },
-            {
-                name: "Nível 4: Investidor Expert",
-                color: "amber",
-                scenarios: [
-                    {
-                        title: "Arbitragem e Moedas",
-                        desc: "O Dólar está muito forte. Seus investimentos offshore valem muito em Reais. O cenário indica queda do Dólar.",
-                        options: [
-                            { text: "Hedge Cambial (Travar taxa de câmbio)", impact: 100, type: "good", feedback: "Profissional. Você protegeu seus ganhos em reais contra a desvalorização da moeda sem precisar vender o ativo." },
-                            { text: "Trazer todo dinheiro para o Brasil", impact: -300, type: "bad", feedback: "Timing errado. Se o dólar cair depois, você trouxe menos recursos e ainda pagou imposto à toa." },
-                            { text: "Manter 100% exposto", impact: -100, type: "bad", feedback: "Volatilidade cambial pode destruir meses de performance. Experts gerenciam o risco cambial ativamente." }
-                        ]
-                    },
-                    {
-                        title: "Private Equity / Venture Capital",
-                        desc: "Convite para investir em uma Startup pré-IPO. Alto risco, potencial de 10x. Isso cabe na sua carteira?",
-                        options: [
-                            { text: "Alocar pequena % (Capital de Risco)", impact: 500, type: "good", feedback: "Assimetria positiva! Perde-se 1x o valor, mas ganha-se 10x. Ideal para Experts com carteira diversificada." },
-                            { text: "Apostar a aposentadoria toda", impact: -1000, type: "bad", feedback: "Amadorismo. Ativos ilíquidos e arriscados exigem posição pequena. Nunca aposte o essencial." },
-                            { text: "Recusar por ser 'aposta'", impact: 0, type: "neutral", feedback: "Conservador. Experts buscam assimetria de retorno, não apenas segurança absoluta." }
-                        ]
-                    },
-                    {
-                        title: "Legado e Sucessão",
-                        desc: "Seu patrimônio é grande. Como otimizar a passagem de bens para herdeiros evitando Inventário caro?",
-                        options: [
-                            { text: "Holdings Familiares e Previdência Privada (VGBL)", impact: 400, type: "good", feedback: "Planejamento sucessório é a fase final da gestão de riqueza. Eficiência tributária e agilidade para seus herdeiros." },
-                            { text: "Deixar para resolver depois", impact: -500, type: "bad", feedback: "Negligência. O Leão e custas judiciais podem comer até 20% do seu legado deixado para a família." },
-                            { text: "Doar tudo em vida", impact: 0, type: "neutral", feedback: "Radical. Resolve o inventário, mas tira seu controle sobre os bens enquanto você ainda está vivo." }
-                        ]
-                    },
-                    {
-                        title: "Colheita de Prejuízos (Tax Harvesting)",
-                        desc: "Você tem R$ 50.000 de prejuízo acumulado em ações. O que fazer para otimizar seus impostos?",
-                        options: [
-                            { text: "Realizar o prejuízo vendendo as ações e recomprar após 30 dias", impact: 250, type: "good", feedback: "Brilhante! Tax Loss Harvesting permite usar prejuízos para abater ganhos futuros, reduzindo legalmente sua carga tributária." },
-                            { text: "Esperar as ações recuperarem", impact: -80, type: "bad", feedback: "Pode demorar anos ou nunca acontecer. Enquanto espera, perde a oportunidade de usar o prejuízo fiscalmente." },
-                            { text: "Ignorar, prejuízo não importa", impact: -100, type: "bad", feedback: "Prejuízo realizado tem valor fiscal! Ignorar isso é deixar dinheiro na mesa que o governo te devolveria em imposto." }
-                        ]
-                    },
-                    {
-                        title: "Estrutura Offshore",
-                        desc: "Seu patrimônio ultrapassou R$ 5 milhões. Uma estrutura offshore em jurisdiction amigável pode trazer benefícios?",
-                        options: [
-                            { text: "Criar holding offshore para diversificação e proteção patrimonial", impact: 300, type: "good", feedback: "Correto para este patamar! Offshores legais oferecem proteção contra risco país, acesso a investimentos globais e planejamento sucessório." },
-                            { text: "Sonegar impostos usando offshores", impact: -2000, type: "bad", feedback: "Ilegal e arriscado! Com CRS e troca automática de informações, a chance de ser pego é altíssima. Multas e prisão são reais." },
-                            { text: "Manter tudo no Brasil por patriotismo", impact: -50, type: "neutral", feedback: "Emocional, não racional. Diversificação geográfica legal é gestão de risco, não traição." }
-                        ]
-                    },
-                    {
-                        title: "Family Office",
-                        desc: "Patrimônio de R$ 20 milhões. Gestores cobram 2% a.a. Você está insatisfeito com os resultados. Qual decisão tomar?",
-                        options: [
-                            { text: "Montar Family Office próprio com equipe interna", impact: 400, type: "good", feedback: "Acima de R$ 15-20M, Family Office próprio faz sentido. Reduz custos, aumenta controle e personaliza a estratégia para sua família." },
-                            { text: "Continuar com o mesmo gestor reclamando", impact: -200, type: "bad", feedback: "Passividade custosa. 2% sobre R$ 20M são R$ 400.000/ano. Se o gestor não performa, troque-o imediatamente." },
-                            { text: "Distribuir o dinheiro entre 10 gestores diferentes", impact: -100, type: "neutral", feedback: "Piora o problema. Mais gestores = mais taxas, mais complexidade e dificuldade de medir performance real." }
-                        ]
-                    }
-                ]
+        async function handleFile(file) {
+            if (!file.name.endsWith('.zip')) {
+                alert('Por favor, selecione um arquivo .zip');
+                return;
             }
-        ];
+            uploadedFile = file;
+            uploadedZip = file;
 
-        function formatCurrency(value) {
-            return new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-            }).format(value);
-        }
+            fileName.textContent = file.name;
+            fileSize.textContent = formatSize(file.size);
 
-        function updateUI() {
-            const formatted = formatCurrency(gameState.balance);
-            document.getElementById('global-score').innerText = formatted;
-            document.getElementById('mobile-score').innerText = formatted;
-            if(document.getElementById('current-balance')) {
-                document.getElementById('current-balance').innerText = formatted;
+            // Read zip contents
+            try {
+                const zip = await JSZip.loadAsync(file);
+                const items = Object.keys(zip.files).slice(0, 50);
+                fileList.innerHTML = items.map(item => {
+                    const isDir = item.endsWith('/');
+                    return `<li class="flex items-center gap-2 ${isDir ? 'text-purple-400' : ''}">${isDir ? '📁' : '📄'} ${item}</li>`;
+                }).join('');
+
+                fileInfo.classList.remove('hidden');
+                dropZone.classList.add('hidden');
+                updateSteps(1);
+            } catch (err) {
+                alert('Erro ao ler o arquivo ZIP: ' + err.message);
             }
         }
 
-        function switchScreen(screenId) {
-            ['screen-intro', 'screen-scenario', 'screen-final'].forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-            document.getElementById(screenId).classList.remove('hidden');
+        removeFile.addEventListener('click', () => {
+            uploadedFile = null;
+            uploadedZip = null;
+            fileInfo.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+            fileInput.value = '';
+        });
+
+        proceedBtn.addEventListener('click', () => {
+            uploadSection.classList.add('hidden');
+            configSection.classList.remove('hidden');
+            updateSteps(2);
+        });
+
+        backBtn.addEventListener('click', () => {
+            configSection.classList.add('hidden');
+            uploadSection.classList.remove('hidden');
+            updateSteps(1);
+        });
+
+        // Icon handling
+        iconDropZone.addEventListener('click', (e) => {
+            e.preventDefault();
+            iconInput.click();
+        });
+        iconDropZone.addEventListener('dragover', (e) => { e.preventDefault(); iconDropZone.classList.add('dragover'); });
+        iconDropZone.addEventListener('dragleave', () => iconDropZone.classList.remove('dragover'));
+        iconDropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            iconDropZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) handleIcon(e.dataTransfer.files[0]);
+        });
+        iconInput.addEventListener('change', (e) => { if (e.target.files.length) handleIcon(e.target.files[0]); });
+
+        function handleIcon(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('Por favor, selecione um arquivo de imagem');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                iconDataUrl = e.target.result;
+                iconImg.src = iconDataUrl;
+                iconPreview.classList.remove('hidden');
+                iconPlaceholder.classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
         }
 
-        function startGame() {
-            playSound('click');
-            gameState.currentPhase = 0;
-            gameState.balance = 1000;
-            gameState.choices = [];
-            updateUI();
-            loadScenario();
+        // Generate Cordova project
+        generateBtn.addEventListener('click', async () => {
+            configSection.classList.add('hidden');
+            processingSection.classList.remove('hidden');
+            updateSteps(3);
+
+            try {
+                await generateCordovaProject();
+            } catch (err) {
+                alert('Erro ao gerar projeto: ' + err.message);
+                console.error(err);
+                processingSection.classList.add('hidden');
+                configSection.classList.remove('hidden');
+            }
+        });
+
+        function setProgress(percent, status) {
+            progressBar.style.width = percent + '%';
+            progressPercent.textContent = Math.round(percent) + '%';
+            if (status) processingStatus.textContent = status;
         }
 
-        function getLevelIndex() {
-            return Math.floor(gameState.currentPhase / 6);
-        }
+        async function generateCordovaProject() {
+            const appName = document.getElementById('appName').value || 'Meu App';
+            const appId = document.getElementById('appId').value || 'com.example.app';
+            const appVersion = document.getElementById('appVersion').value || '1.0.0';
+            const minSdk = document.getElementById('minSdk').value || '26';
+            const orientation = document.getElementById('orientation').value || 'default';
+            const appDesc = document.getElementById('appDesc').value || 'App criado com AI Studio';
+            const appAuthor = document.getElementById('appAuthor').value || 'Developer';
+            const addCSP = document.getElementById('addCSP').checked;
 
-        function loadScenario() {
-            const levelIdx = getLevelIndex();
-            const scenarioIdx = gameState.currentPhase % 6;
-            const levelData = levels[levelIdx];
-            const scenarioData = levelData.scenarios[scenarioIdx];
-
-            const badge = document.getElementById('level-badge');
-            badge.innerText = levelData.name;
-            badge.className = `inline-block px-2 sm:px-3 py-1 rounded-md text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-${levelData.color}-500/20 text-${levelData.color}-400 border border-${levelData.color}-500/30 mb-2`;
-
-            const progressPct = ((gameState.currentPhase + 1) / gameState.totalPhases) * 100;
-            document.getElementById('level-progress').style.width = `${progressPct}%`;
-            document.getElementById('level-progress').className = `h-1.5 transition-all duration-500 bg-${levelData.color}-500`;
-
-            document.getElementById('scenario-title').innerText = scenarioData.title;
-            document.getElementById('scenario-desc').innerText = scenarioData.desc;
-
-            const container = document.getElementById('options-container');
-            container.innerHTML = '';
-
-            scenarioData.options.forEach((opt) => {
-                const btn = document.createElement('button');
-                btn.className = "btn-option w-full text-left p-3 sm:p-4 md:p-5 rounded-lg sm:rounded-xl border border-white/10 bg-slate-800/40 hover:bg-slate-700/60 active:bg-slate-700/80 group flex justify-between items-center gap-2 sm:gap-3 min-h-[60px] sm:min-h-[72px]";
-                btn.onclick = () => handleChoice(opt);
-                btn.innerHTML = `
-                    <span class="font-medium text-sm sm:text-base md:text-lg text-slate-200 group-hover:text-white">${opt.text}</span>
-                    <div class="w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 border-slate-600 group-hover:border-${levelData.color}-400 flex items-center justify-center flex-shrink-0">
-                        <div class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-${levelData.color}-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    </div>
-                `;
-                container.appendChild(btn);
+            const selectedPlugins = [];
+            document.querySelectorAll('.plugin-check:checked').forEach(cb => {
+                selectedPlugins.push(cb.value);
             });
 
-            switchScreen('screen-scenario');
-        }
+            setProgress(5, 'Lendo arquivo ZIP original...');
+            await sleep(200);
 
-        function handleChoice(option) {
-            playSound(option.type === 'good' ? 'success' : (option.type === 'bad' ? 'error' : 'click'));
+            // Read source zip
+            const sourceZip = await JSZip.loadAsync(uploadedZip);
+            setProgress(15, 'Extraindo arquivos do app...');
+            await sleep(300);
 
-            gameState.balance += option.impact;
-            if(gameState.balance < 0) gameState.balance = 0;
-            
-            gameState.choices.push({
-                type: option.type,
-                impact: option.impact,
-                level: getLevelIndex()
+            const newZip = new JSZip();
+
+            // Create Cordova project structure
+            setProgress(20, 'Criando estrutura do projeto Cordova...');
+            await sleep(200);
+
+            // package.json
+            const packageJson = {
+                name: appName.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+                displayName: appName,
+                version: appVersion,
+                description: appDesc,
+                main: "index.js",
+                scripts: {
+                    "build": "cordova build android",
+                    "run": "cordova run android",
+                    "clean": "cordova clean"
+                },
+                dependencies: {},
+                devDependencies: {
+                    "cordova-android": "^13.0.0"
+                },
+                cordova: {
+                    platforms: ["android"],
+                    plugins: {}
+                }
+            };
+
+            selectedPlugins.forEach(plugin => {
+                packageJson.dependencies[plugin] = "latest";
+                packageJson.cordova.plugins[plugin] = {};
             });
 
-            updateUI();
+            newZip.file('package.json', JSON.stringify(packageJson, null, 2));
 
-            const modal = document.getElementById('modal-feedback');
-            const border = document.getElementById('feedback-border');
-            const iconBg = document.getElementById('feedback-icon-bg');
-            const title = document.getElementById('feedback-title');
-            const msg = document.getElementById('feedback-message');
-            const change = document.getElementById('feedback-change');
-            const nextBtn = document.getElementById('next-level-btn');
+            // config.xml
+            const configXml = generateConfigXml(appName, appId, appVersion, appDesc, appAuthor, orientation, minSdk, selectedPlugins, addCSP);
+            newZip.file('config.xml', configXml);
 
-            modal.classList.remove('hidden');
-            
-            if (option.type === 'good') {
-                border.style.borderColor = '#10b981';
-                iconBg.className = "w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-xl sm:text-2xl bg-emerald-500/20 text-emerald-400 flex-shrink-0";
-                iconBg.innerText = "🚀";
-                title.innerText = "Decisão Inteligente";
-                title.className = "text-lg sm:text-2xl font-bold text-emerald-400 mb-2";
-                change.className = "font-mono font-bold text-sm sm:text-lg text-emerald-400";
-                nextBtn.className = "w-full py-3 px-4 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-500 transition-colors active:scale-95 text-sm sm:text-base";
-            } else if (option.type === 'bad') {
-                border.style.borderColor = '#ef4444';
-                iconBg.className = "w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-xl sm:text-2xl bg-red-500/20 text-red-400 flex-shrink-0";
-                iconBg.innerText = "️";
-                title.innerText = "Erro de Estratégia";
-                title.className = "text-lg sm:text-2xl font-bold text-red-400 mb-2";
-                change.className = "font-mono font-bold text-sm sm:text-lg text-red-400";
-                nextBtn.className = "w-full py-3 px-4 bg-slate-700 text-white font-bold rounded-xl hover:bg-slate-600 transition-colors active:scale-95 text-sm sm:text-base";
-            } else {
-                border.style.borderColor = '#3b82f6';
-                iconBg.className = "w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-xl sm:text-2xl bg-blue-500/20 text-blue-400 flex-shrink-0";
-                iconBg.innerText = "⚖️";
-                title.innerText = "Resultado Neutro";
-                title.className = "text-lg sm:text-2xl font-bold text-blue-400 mb-2";
-                change.className = "font-mono font-bold text-sm sm:text-lg text-slate-300";
-                nextBtn.className = "w-full py-3 px-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-500 transition-colors active:scale-95 text-sm sm:text-base";
-            }
+            setProgress(30, 'Gerando config.xml...');
+            await sleep(200);
 
-            msg.innerText = option.feedback;
-            const sign = option.impact >= 0 ? "+" : "";
-            change.innerText = `${sign} ${formatCurrency(option.impact)}`;
-        }
+            // Create www directory with source files
+            setProgress(35, 'Copiando arquivos do app para www/...');
+            await sleep(200);
 
-        function closeFeedback() {
-            document.getElementById('modal-feedback').classList.add('hidden');
-        }
+            const wwwFolder = newZip.folder('www');
+            let fileCount = 0;
+            const sourceEntries = Object.keys(sourceZip.files);
 
-        function nextPhase() {
-            playSound('click');
-            document.getElementById('modal-feedback').classList.add('hidden');
-            
-            gameState.currentPhase++;
-            
-            if (gameState.currentPhase < gameState.totalPhases) {
-                loadScenario();
-            } else {
-                showFinalScreen();
-            }
-        }
+            for (let i = 0; i < sourceEntries.length; i++) {
+                const entryName = sourceEntries[i];
+                const sourceFile = sourceZip.files[entryName];
 
-        function showFinalScreen() {
-            playSound('win');
-            
-            let goodCount = 0, badCount = 0, neutralCount = 0;
-            
-            gameState.choices.forEach(c => {
-                if (c.type === 'good') goodCount++;
-                else if (c.type === 'bad') badCount++;
-                else neutralCount++;
-            });
+                if (sourceFile.dir) continue;
 
-            let maxPossibleGain = 0;
-            let minPossibleLoss = 0;
-            
-            levels.forEach(level => {
-                level.scenarios.forEach(scenario => {
-                    let bestImpact = -Infinity;
-                    let worstImpact = Infinity;
-                    scenario.options.forEach(opt => {
-                        if (opt.impact > bestImpact) bestImpact = opt.impact;
-                        if (opt.impact < worstImpact) worstImpact = opt.impact;
-                    });
-                    maxPossibleGain += bestImpact;
-                    minPossibleLoss += worstImpact;
-                });
-            });
+                // Clean up path - remove root folder if exists
+                let cleanPath = entryName;
+                const parts = entryName.split('/');
+                if (parts.length > 1 && !parts[0].includes('.') && !parts[0].startsWith('__')) {
+                    cleanPath = parts.slice(1).join('/');
+                }
 
-            const finalBalance = gameState.balance;
-            const startBalance = 1000;
-            const actualGain = finalBalance - startBalance;
+                if (cleanPath === '') continue;
 
-            const goodPercentage = (goodCount / gameState.totalPhases) * 100;
-            let classification, classColor, classBg, classBorder;
-            
-            if (goodPercentage >= 85) {
-                classification = "🏆 Investidor Expert (Top 5%)";
-                classColor = "text-amber-400";
-                classBg = "bg-amber-500/10";
-                classBorder = "border-amber-500";
-            } else if (goodPercentage >= 70) {
-                classification = "🥇 Investidor Avançado";
-                classColor = "text-emerald-400";
-                classBg = "bg-emerald-500/10";
-                classBorder = "border-emerald-500";
-            } else if (goodPercentage >= 50) {
-                classification = "📊 Investidor Intermediário";
-                classColor = "text-blue-400";
-                classBg = "bg-blue-500/10";
-                classBorder = "border-blue-500";
-            } else if (goodPercentage >= 30) {
-                classification = "📚 Investidor em Formação";
-                classColor = "text-orange-400";
-                classBg = "bg-orange-500/10";
-                classBorder = "border-orange-500";
-            } else {
-                classification = "⚠️ Investidor Iniciante (Risco Alto)";
-                classColor = "text-red-400";
-                classBg = "bg-red-500/10";
-                classBorder = "border-red-500";
-            }
+                const content = await sourceFile.async('uint8array');
+                wwwFolder.file(cleanPath, content);
+                fileCount++;
 
-            document.getElementById('final-score').innerText = formatCurrency(finalBalance);
-            document.getElementById('classification-text').innerText = classification;
-            document.getElementById('classification-text').className = `text-base sm:text-xl font-bold ${classColor}`;
-            const badge = document.getElementById('classification-badge');
-            badge.className = `inline-block px-4 sm:px-6 py-2 sm:py-3 rounded-xl border-2 mb-6 sm:mb-8 ${classBg} ${classBorder}`;
-
-            document.getElementById('stat-good').innerText = goodCount;
-            document.getElementById('stat-neutral').innerText = neutralCount;
-            document.getElementById('stat-bad').innerText = badCount;
-
-            const gainSign = actualGain >= 0 ? "+" : "";
-            document.getElementById('max-gain').innerText = `+ ${formatCurrency(maxPossibleGain)}`;
-            document.getElementById('real-gain').innerText = `${gainSign} ${formatCurrency(actualGain)}`;
-            
-            const lossAvoided = actualGain - minPossibleLoss;
-            document.getElementById('loss-avoided').innerText = `+ ${formatCurrency(lossAvoided)}`;
-
-            setTimeout(() => {
-                const maxBar = Math.min(100, Math.max(0, (maxPossibleGain / 5000) * 100));
-                const realBar = Math.min(100, Math.max(0, (actualGain / maxPossibleGain) * 100));
-                const lossBar = Math.min(100, Math.max(0, (lossAvoided / (maxPossibleGain - minPossibleLoss)) * 100));
-                
-                document.getElementById('max-gain-bar').style.width = `${maxBar}%`;
-                document.getElementById('real-gain-bar').style.width = `${realBar}%`;
-                document.getElementById('loss-avoided-bar').style.width = `${lossBar}%`;
-            }, 300);
-
-            drawPerformanceChart();
-            switchScreen('screen-final');
-        }
-
-        function drawPerformanceChart() {
-            const canvas = document.getElementById('performance-chart');
-            const ctx = canvas.getContext('2d');
-            
-            const rect = canvas.parentElement.getBoundingClientRect();
-            const dpr = window.devicePixelRatio || 1;
-            const displayWidth = Math.min(rect.width - 32, 700);
-            
-            canvas.style.width = displayWidth + 'px';
-            canvas.width = displayWidth * dpr;
-            canvas.height = 200 * dpr;
-            canvas.style.height = '200px';
-            
-            ctx.scale(dpr, dpr);
-            
-            const w = displayWidth;
-            const h = 200;
-            const padding = 36;
-            const chartW = w - padding * 2;
-            const chartH = h - padding * 2;
-
-            ctx.clearRect(0, 0, w, h);
-
-            let cumulativeBalance = [1000];
-            let currentBal = 1000;
-            gameState.choices.forEach(c => {
-                currentBal += c.impact;
-                if (currentBal < 0) currentBal = 0;
-                cumulativeBalance.push(currentBal);
-            });
-
-            const maxVal = Math.max(...cumulativeBalance, 2000);
-            const minVal = 0;
-            const range = maxVal - minVal;
-
-            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-            ctx.lineWidth = 1;
-            for (let i = 0; i <= 4; i++) {
-                const y = padding + (chartH / 4) * i;
-                ctx.beginPath();
-                ctx.moveTo(padding, y);
-                ctx.lineTo(w - padding, y);
-                ctx.stroke();
-                
-                const val = maxVal - (range / 4) * i;
-                ctx.fillStyle = 'rgba(255,255,255,0.3)';
-                ctx.font = '9px Inter';
-                ctx.textAlign = 'right';
-                ctx.fillText(formatCurrency(val).replace('R$\u00a0', ''), padding - 4, y + 3);
-            }
-
-            ctx.fillStyle = 'rgba(255,255,255,0.2)';
-            ctx.font = '8px Inter';
-            ctx.textAlign = 'center';
-            
-            const stepCount = cumulativeBalance.length - 1;
-            const stepX = chartW / stepCount;
-            
-            for (let i = 0; i <= stepCount; i++) {
-                const x = padding + stepX * i;
-                if (i % 6 === 0 || i === stepCount) {
-                    ctx.fillText(i === 0 ? 'Início' : (i === stepCount ? 'Fim' : `F${i}`), x, h - 8);
+                if (i % 10 === 0) {
+                    setProgress(35 + (i / sourceEntries.length) * 25, `Processando arquivo ${i + 1}/${sourceEntries.length}...`);
+                    await sleep(10);
                 }
             }
 
-            const levelColors = ['rgba(16,185,129,0.08)', 'rgba(59,130,246,0.08)', 'rgba(168,85,247,0.08)', 'rgba(245,158,11,0.08)'];
-            for (let l = 0; l < 4; l++) {
-                const startX = padding + stepX * (l * 6);
-                const endX = padding + stepX * ((l + 1) * 6);
-                ctx.fillStyle = levelColors[l];
-                ctx.fillRect(startX, padding, endX - startX, chartH);
+            setProgress(65, 'Gerando ícones e splash screens...');
+            await sleep(200);
+
+            // Create icon resources
+            if (iconDataUrl) {
+                const base64Data = iconDataUrl.split(',')[1];
+                const iconBytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
+
+                // Create res folder with icons
+                const resFolder = newZip.folder('res');
+                const iconFolder = resFolder.folder('icon');
+                const splashFolder = resFolder.folder('splash');
+                const androidFolder = resFolder.folder('android');
+
+                // Generate different icon sizes
+                const iconSizes = {
+                    'android/mdpi.png': 48,
+                    'android/hdpi.png': 72,
+                    'android/xhdpi.png': 96,
+                    'android/xxhdpi.png': 144,
+                    'android/xxxhdpi.png': 192,
+                    'ios/icon-20.png': 20,
+                    'ios/icon-40.png': 40,
+                    'ios/icon-60.png': 60,
+                    'ios/icon-60@2x.png': 120,
+                    'ios/icon-60@3x.png': 180,
+                    'ios/icon-76.png': 76,
+                    'ios/icon-76@2x.png': 152,
+                    'ios/icon-83.5@2x.png': 167,
+                    'ios/icon-1024.png': 1024,
+                };
+
+                // Create simple scaled icons (copy original for now - proper scaling requires canvas)
+                androidFolder.file('mdpi.png', iconBytes);
+                androidFolder.file('hdpi.png', iconBytes);
+                androidFolder.file('xhdpi.png', iconBytes);
+                androidFolder.file('xxhdpi.png', iconBytes);
+                androidFolder.file('xxxhdpi.png', iconBytes);
+                iconFolder.file('android.png', iconBytes);
+
+                // Create a simple splash screen canvas
+                try {
+                    const splashCanvas = document.createElement('canvas');
+                    splashCanvas.width = 2732;
+                    splashCanvas.height = 2732;
+                    const ctx = splashCanvas.getContext('2d');
+
+                    // Gradient background
+                    const gradient = ctx.createLinearGradient(0, 0, 2732, 2732);
+                    gradient.addColorStop(0, '#1a0a2e');
+                    gradient.addColorStop(0.5, '#0d1b2a');
+                    gradient.addColorStop(1, '#1a0a2e');
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(0, 0, 2732, 2732);
+
+                    // App name text
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 120px Arial, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(appName, 1366, 1200);
+
+                    // Subtitle
+                    ctx.fillStyle = 'rgba(139, 92, 246, 0.8)';
+                    ctx.font = '60px Arial, sans-serif';
+                    ctx.fillText('Powered by AI Studio', 1366, 1320);
+
+                    // Loading indicator
+                    ctx.strokeStyle = 'rgba(139, 92, 246, 0.5)';
+                    ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    ctx.arc(1366, 1500, 40, 0, Math.PI * 2);
+                    ctx.stroke();
+
+                    const splashDataUrl = splashCanvas.toDataURL('image/png');
+                    const splashBytes = Uint8Array.from(atob(splashDataUrl.split(',')[1]), c => c.charCodeAt(0));
+
+                    androidFolder.file('splash-land-hdpi.png', splashBytes);
+                    androidFolder.file('splash-land-mdpi.png', splashBytes);
+                    androidFolder.file('splash-land-xhdpi.png', splashBytes);
+                    androidFolder.file('splash-land-xxhdpi.png', splashBytes);
+                    androidFolder.file('splash-land-xxxhdpi.png', splashBytes);
+                    androidFolder.file('splash-port-hdpi.png', splashBytes);
+                    androidFolder.file('splash-port-mdpi.png', splashBytes);
+                    androidFolder.file('splash-port-xhdpi.png', splashBytes);
+                    androidFolder.file('splash-port-xxhdpi.png', splashBytes);
+                    androidFolder.file('splash-port-xxxhdpi.png', splashBytes);
+                    splashFolder.file('android.png', splashBytes);
+                } catch (e) {
+                    console.warn('Could not generate splash screen:', e);
+                }
+            } else {
+                // Generate default icon using canvas
+                try {
+                    const iconCanvas = document.createElement('canvas');
+                    iconCanvas.width = 1024;
+                    iconCanvas.height = 1024;
+                    const ctx = iconCanvas.getContext('2d');
+
+                    // Background
+                    const gradient = ctx.createRadialGradient(512, 512, 0, 512, 512, 512);
+                    gradient.addColorStop(0, '#8b5cf6');
+                    gradient.addColorStop(1, '#1a0a2e');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    roundRect(ctx, 100, 100, 824, 824, 180);
+                    ctx.fill();
+
+                    // AI icon
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = 'bold 400px Arial, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('AI', 512, 512);
+
+                    const iconDataUrl = iconCanvas.toDataURL('image/png');
+                    const iconBytes = Uint8Array.from(atob(iconDataUrl.split(',')[1]), c => c.charCodeAt(0));
+
+                    const resFolder = newZip.folder('res');
+                    const androidFolder = resFolder.folder('android');
+
+                    androidFolder.file('mdpi.png', iconBytes);
+                    androidFolder.file('hdpi.png', iconBytes);
+                    androidFolder.file('xhdpi.png', iconBytes);
+                    androidFolder.file('xxhdpi.png', iconBytes);
+                    androidFolder.file('xxxhdpi.png', iconBytes);
+                    resFolder.folder('icon').file('android.png', iconBytes);
+                } catch (e) {
+                    console.warn('Could not generate default icon:', e);
+                }
             }
 
-            ctx.beginPath();
-            ctx.strokeStyle = '#10b981';
-            ctx.lineWidth = 2;
-            ctx.lineJoin = 'round';
-            ctx.lineCap = 'round';
+            setProgress(80, 'Gerando scripts e documentação...');
+            await sleep(200);
 
-            cumulativeBalance.forEach((val, i) => {
-                const x = padding + stepX * i;
-                const y = padding + chartH - ((val - minVal) / range) * chartH;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
+            // README
+            const readme = generateReadme(appName, appId, appVersion, selectedPlugins);
+            newZip.file('README.md', readme);
+
+            // Build script
+            const buildScript = `#!/bin/bash
+# Build script for ${appName}
+echo "Building ${appName} v${appVersion}..."
+
+# Check if cordova is installed
+if ! command -v cordova &> /dev/null; then
+    echo "Cordova not found. Installing..."
+    npm install -g cordova
+fi
+
+# Install dependencies
+echo "Installing dependencies..."
+npm install
+
+# Add Android platform if not exists
+if [ ! -d "platforms/android" ]; then
+    echo "Adding Android platform..."
+    cordova platform add android@latest
+fi
+
+# Build APK
+echo "Building APK..."
+cordova build android
+
+echo ""
+echo "✅ Build complete!"
+echo "📱 APK location: platforms/android/app/build/outputs/apk/debug/app-debug.apk"
+`;
+            newZip.file('build.sh', buildScript);
+
+            // Windows build script
+            const buildBat = `@echo off
+echo Building ${appName} v${appVersion}...
+
+REM Check if cordova is installed
+where cordova >nul 2>&1
+if %errorlevel% neq 0 (
+    echo Cordova not found. Installing...
+    npm install -g cordova
+)
+
+REM Install dependencies
+echo Installing dependencies...
+call npm install
+
+REM Add Android platform if not exists
+if not exist "platforms\\android" (
+    echo Adding Android platform...
+    call cordova platform add android@latest
+)
+
+REM Build APK
+echo Building APK...
+call cordova build android
+
+echo.
+echo Build complete!
+echo APK location: platforms\\android\\app\\build\\outputs\\apk\\debug\\app-debug.apk
+pause
+`;
+            newZip.file('build.bat', buildBat);
+
+            // .gitignore
+            newZip.file('.gitignore', `node_modules/
+platforms/
+plugins/
+*.apk
+*.aab
+.DS_Store
+.idea/
+*.iml
+`);
+
+            // Create hooks folder
+            const hooksFolder = newZip.folder('hooks');
+            const afterPrepareHook = `#!/usr/bin/env node
+// After prepare hook - ensure www files are up to date
+const fs = require('fs');
+const path = require('path');
+
+console.log('Running after_prepare hook...');
+
+// Fix any AI Studio specific issues
+const wwwPath = path.join(__dirname, '..', 'www');
+
+// Ensure cordova.js is referenced
+const indexPath = path.join(wwwPath, 'index.html');
+if (fs.existsSync(indexPath)) {
+    let content = fs.readFileSync(indexPath, 'utf8');
+
+    // Add cordova.js reference if not present
+    if (!content.includes('cordova.js')) {
+        content = content.replace('</head>', '<script src="cordova.js"></script>\\n</head>');
+        fs.writeFileSync(indexPath, content);
+        console.log('Added cordova.js reference to index.html');
+    }
+
+    // Add deviceready handler if not present
+    if (!content.includes('deviceready')) {
+        const devicereadyScript = \`
+<script>
+document.addEventListener('deviceready', function() {
+    console.log('Cordova is ready!');
+    if (navigator.splashscreen) {
+        navigator.splashscreen.hide();
+    }
+}, false);
+</script>
+\`;
+        content = content.replace('</body>', devicereadyScript + '\\n</body>');
+        fs.writeFileSync(indexPath, content);
+        console.log('Added deviceready handler to index.html');
+    }
+}
+`;
+            hooksFolder.file('after_prepare', afterPrepareHook);
+
+            setProgress(90, 'Finalizando pacote...');
+            await sleep(200);
+
+            // Generate final zip
+            generatedZipBlob = await newZip.generateAsync({
+                type: 'blob',
+                compression: 'DEFLATE',
+                compressionOptions: { level: 6 }
+            }, (metadata) => {
+                setProgress(90 + metadata.percent * 0.1, `Comprimindo... ${Math.round(metadata.percent)}%`);
             });
-            ctx.stroke();
 
-            const gradient = ctx.createLinearGradient(0, padding, 0, padding + chartH);
-            gradient.addColorStop(0, 'rgba(16,185,129,0.25)');
-            gradient.addColorStop(1, 'rgba(16,185,129,0)');
-            
-            ctx.beginPath();
-            cumulativeBalance.forEach((val, i) => {
-                const x = padding + stepX * i;
-                const y = padding + chartH - ((val - minVal) / range) * chartH;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            });
-            ctx.lineTo(padding + stepX * (cumulativeBalance.length - 1), padding + chartH);
-            ctx.lineTo(padding, padding + chartH);
-            ctx.closePath();
-            ctx.fillStyle = gradient;
-            ctx.fill();
+            setProgress(100, 'Concluído!');
+            await sleep(500);
 
-            cumulativeBalance.forEach((val, i) => {
-                const x = padding + stepX * i;
-                const y = padding + chartH - ((val - minVal) / range) * chartH;
-                
-                ctx.beginPath();
-                ctx.arc(x, y, 3, 0, Math.PI * 2);
-                ctx.fillStyle = i === cumulativeBalance.length - 1 ? '#f59e0b' : '#10b981';
-                ctx.fill();
-                ctx.strokeStyle = '#0f172a';
-                ctx.lineWidth = 1.5;
-                ctx.stroke();
-            });
+            // Show results
+            processingSection.classList.add('hidden');
+            resultSection.classList.remove('hidden');
 
-            const startY = padding + chartH - ((1000 - minVal) / range) * chartH;
-            ctx.beginPath();
-            ctx.setLineDash([4, 4]);
-            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
-            ctx.lineWidth = 1;
-            ctx.moveTo(padding, startY);
-            ctx.lineTo(w - padding, startY);
-            ctx.stroke();
-            ctx.setLineDash([]);
-            
-            ctx.fillStyle = 'rgba(255,255,255,0.2)';
-            ctx.font = '8px Inter';
-            ctx.textAlign = 'left';
-            ctx.fillText('Capital Inicial', padding + 4, startY - 4);
+            // Update stats
+            let totalFiles = 0;
+            newZip.forEach(() => totalFiles++);
+            document.getElementById('statFiles').textContent = totalFiles + fileCount;
+            document.getElementById('statSize').textContent = formatSize(generatedZipBlob.size);
+            document.getElementById('statPlugins').textContent = selectedPlugins.length;
+
+            updateSteps(3);
         }
 
-        // Intro animation
-        window.addEventListener('load', () => {
-            const introScreen = document.getElementById('intro-screen');
-            const progressBar = document.getElementById('intro-progress');
-            
-            setTimeout(() => {
-                progressBar.style.width = '100%';
-            }, 100);
-
-            setTimeout(() => {
-                introScreen.style.opacity = '0';
-                setTimeout(() => {
-                    introScreen.style.display = 'none';
-                    document.getElementById('screen-intro').classList.remove('hidden');
-                }, 1000);
-            }, 5000);
-        });
-
-        // Resize handler for chart
-        window.addEventListener('resize', () => {
-            if (!document.getElementById('screen-final').classList.contains('hidden')) {
-                drawPerformanceChart();
+        // Download
+        downloadBtn.addEventListener('click', () => {
+            if (generatedZipBlob) {
+                const safeName = (document.getElementById('appName').value || 'cordova-project').replace(/[^a-zA-Z0-9_-]/g, '-');
+                saveAs(generatedZipBlob, `cordova-${safeName}.zip`);
             }
         });
+
+        // New conversion
+        newConversionBtn.addEventListener('click', () => {
+            resultSection.classList.add('hidden');
+            uploadSection.classList.remove('hidden');
+            fileInfo.classList.add('hidden');
+            dropZone.classList.remove('hidden');
+            uploadedZip = null;
+            uploadedFile = null;
+            iconDataUrl = null;
+            generatedZipBlob = null;
+            fileInput.value = '';
+            iconInput.value = '';
+            iconPreview.classList.add('hidden');
+            iconPlaceholder.classList.remove('hidden');
+            progressBar.style.width = '0%';
+            progressPercent.textContent = '0%';
+            updateSteps(0);
+        });
+
+        // Helper functions
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        function roundRect(ctx, x, y, w, h, r) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
+        }
+
+        function generateConfigXml(appName, appId, appVersion, appDesc, appAuthor, orientation, minSdk, plugins, addCSP) {
+            let accessElements = '';
+            let cspMeta = '';
+
+            if (addCSP) {
+                accessElements = `
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <allow-navigation href="*" />`;
+            }
+
+            let orientationAttr = '';
+            if (orientation !== 'default') {
+                orientationAttr = `        <preference name="Orientation" value="${orientation}" />
+`;
+            }
+
+            // Plugin preferences
+            let pluginPrefs = '';
+            if (plugins.includes('cordova-plugin-statusbar')) {
+                pluginPrefs += `        <preference name="StatusBarOverlaysWebView" value="false" />
+        <preference name="StatusBarBackgroundColor" value="#1a0a2e" />
+        <preference name="StatusBarStyle" value="lightcontent" />
+`;
+            }
+            if (plugins.includes('cordova-plugin-splashscreen')) {
+                pluginPrefs += `        <preference name="SplashScreen" value="screen" />
+        <preference name="SplashScreenDelay" value="3000" />
+        <preference name="FadeSplashScreenDuration" value="500" />
+        <preference name="AutoHideSplashScreen" value="false" />
+        <preference name="ShowSplashScreenSpinner" value="false" />
+`;
+            }
+
+            let pluginsXml = '';
+            plugins.forEach(plugin => {
+                pluginsXml += `    <plugin name="${plugin}" spec="latest" />
+`;
+            });
+
+            // Icon and splash references
+            let iconXml = '';
+            const iconSizes = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
+            iconSizes.forEach(size => {
+                iconXml += `        <icon density="${size}" src="res/android/${size}.png" />
+`;
+            });
+
+            let splashXml = '';
+            const splashLand = ['ldpi', 'mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
+            const splashPort = ['ldpi', 'mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi'];
+            splashLand.forEach(size => {
+                splashXml += `        <splash density="land-${size}" src="res/android/splash-land-${size}.png" />
+`;
+            });
+            splashPort.forEach(size => {
+                splashXml += `        <splash density="port-${size}" src="res/android/splash-port-${size}.png" />
+`;
+            });
+
+            const configXml = `<?xml version='1.0' encoding='utf-8'?>
+<widget id="${appId}" version="${appVersion}" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>${appName}</name>
+    <description>${appDesc}</description>
+    <author email="developer@example.com" href="https://example.com">${appAuthor}</author>
+    <content src="index.html" />
+
+    <!-- Android Preferences -->
+    <preference name="android-minSdkVersion" value="${minSdk}" />
+    <preference name="android-targetSdkVersion" value="34" />
+    <preference name="android-compileSdkVersion" value="34" />
+    <preference name="AndroidWindowSplashScreenBackground" value="#1a0a2e" />
+    <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/android/xxxhdpi.png" />
+    <preference name="AndroidWindowSplashScreenIconBackgroundColor" value="#1a0a2e" />
+    <preference name="AndroidXEnabled" value="true" />
+    <preference name="loadUrlTimeoutValue" value="70000" />
+    <preference name="BackgroundColor" value="#1a0a2e" />
+    <preference name="DisallowOverscroll" value="true" />
+    <preference name="Fullscreen" value="false" />
+    <preference name="KeepRunning" value="true" />
+${orientationAttr}${pluginPrefs}
+    <!-- Platform: Android -->
+    <platform name="android">
+        ${accessElements}
+
+        <!-- Icons -->
+${iconXml}
+        <!-- Splash Screens -->
+${splashXml}
+
+        <!-- Edit AndroidManifest.xml -->
+        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">
+            <application android:usesCleartextTraffic="true" />
+            <application android:allowBackup="true" />
+            <application android:hardwareAccelerated="true" />
+        </edit-config>
+    </platform>
+
+    <!-- Plugins -->
+${pluginsXml}
+
+    <!-- Engine -->
+    <engine name="android" spec="~13.0.0" />
+</widget>`;
+
+            return configXml;
+        }
+
+        function generateReadme(appName, appId, appVersion, plugins) {
+            return `# ${appName} - Cordova Android App
+
+## Informações do App
+- **Nome:** ${appName}
+- **Package ID:** ${appId}
+- **Versão:** ${appVersion}
+- **Plataforma:** Android (Cordova)
+
+## Plugins Incluídos
+${plugins.map(p => `- ${p}`).join('\n')}
+
+## Pré-requisitos
+1. [Node.js](https://nodejs.org/) 18 ou superior
+2. [Android Studio](https://developer.android.com/studio) com SDK instalado
+3. [JDK 11](https://adoptium.net/) ou superior
+
+## Variáveis de Ambiente
+Configure as seguintes variáveis:
+\`\`\`bash
+export ANDROID_HOME=$HOME/Android/Sdk
+export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk
+\`\`\`
+
+## Instalação e Build
+
+### Linux/macOS
+\`\`\`bash
+chmod +x build.sh
+./build.sh
+\`\`\`
+
+### Windows
+\`\`\`cmd
+build.bat
+\`\`\`
+
+### Manual
+\`\`\`bash
+# Instalar dependências
+npm install
+
+# Adicionar plataforma Android
+cordova platform add android@latest
+
+# Compilar
+cordova build android
+\`\`\`
+
+## APK Gerado
+O APK de debug será gerado em:
+\`\`\`
+platforms/android/app/build/outputs/apk/debug/app-debug.apk
+\`\`\`
+
+## Build para Produção (Release)
+\`\`\`bash
+cordova build android --release
+\`\`\`
+
+O APK não assinado será gerado em:
+\`\`\`
+platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk
+\`\`\`
+
+Para assinar o APK:
+\`\`\`bash
+# Gerar keystore (primeira vez)
+keytool -genkey -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias my-alias
+
+# Assinar APK
+jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore my-release-key.jks platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk my-alias
+
+# Otimizar com zipalign
+zipalign -v 4 platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk ${appName.replace(/[^a-zA-Z0-9]/g, '')}-${appVersion}.apk
+\`\`\`
+
+## Testar no Dispositivo
+\`\`\`bash
+# Conectar dispositivo via USB e executar
+cordova run android
+\`\`\`
+
+## Troubleshooting
+
+### Erro: SDK not found
+Verifique se ANDROID_HOME está configurado corretamente.
+
+### Erro: Java not found
+Verifique se JAVA_HOME está configurado e JDK 11+ está instalado.
+
+### Erro: Gradle build failed
+Tente: \`cordova clean\` e depois \`cordova build android\`
+
+## Estrutura do Projeto
+\`\`\`
+cordova-project/
+├── www/                    # Arquivos do app (web)
+│   ├── index.html
+│   ├── css/
+│   ├── js/
+│   └── ...
+├── config.xml              # Configuração Cordova
+├── package.json            # Dependências
+├── res/                    # Ícones e splash screens
+│   ├── android/
+│   └── icon/
+├── hooks/                  # Hooks de build
+├── build.sh                # Script Linux/macOS
+└── build.bat               # Script Windows
+\`\`\`
+
+---
+Gerado por CordovaPack - Conversor AI Studio → Android
+`;
+        }
+
+        // Initialize
+        updateSteps(0);
+    })();
     </script>
 </body>
 </html>
